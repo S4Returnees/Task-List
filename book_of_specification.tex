@@ -121,7 +121,6 @@ Completion of a repeating task triggers creation of a fresh occurrence, guided b
 
 Categories can be created, changed, or removed by users through the system. Following a category removal, linked tasks remain unless specified otherwise. One at a time, adjustments must be made manually for affected tasks. A task might belong to one category, though it may exist independently if needed. Decisions about unlinked tasks rest solely with the user after deletion.
 
-\section{Technical constraints}
 
 \subsection{Task Organization}
 A built-in sorting function helps users arrange tasks by different attributes. Depending on preference, entries appear ordered by name, deadline, urgency, or completion state. One option lets people group items alphabetically through their titles. Another path organizes assignments by when they are due. Priority tags guide arrangement based on importance levels. Status indicators allow viewing progress stages as a sequence.
@@ -143,14 +142,14 @@ A user sees tasks laid out plainly, each marked by name, current state, urgency 
 
 A calendar pane displays scheduled tasks across months, with weekly views available if needed. Navigation feels natural and simplicity stays central throughout the arrangement.
 
-\subsection{Language and OS}
-
-The project will be developed using the Rust programming language to ensure high performance, memory safety, and thread-safe concurrency without the overhead of a garbage collector. The application must be fully compatible with both Linux (Ubuntu, Fedora, Debian) and Windows (10 and 11), providing a seamless and consistent user experience across both environments. To achieve this, the development process will prioritize cross-platform abstractions and a unified codebase, leveraging the Cargo package manager for efficient dependency handling and build automation. By avoiding OS-specific APIs where possible and utilizing Rust’s robust standard library, the solution will maintain long-term portability and stability on both target operating systems.
-
 \subsection{Website}
 The project's webpage gives a straightforward look at what the app does along with key functions it supports.
 
 A quick glance reveals how the tool organizes tasks, making daily planning easier for visitors who land there. From there, anyone can grab the latest build. Information on how to use core parts appears early so confusion drops fast once someone begins exploring.
+
+\section{Technical constraints}
+
+The project will be developed using the Rust programming language, ensuring full compatibility and a consistent experience across both Windows and Linux environments. The development process will rely on Cargo for efficient dependency management and automated build procedures.
 
 \section{Project organization}
 \subsection{Task distribution}
