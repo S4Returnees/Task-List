@@ -1,0 +1,72 @@
+{
+  "category": [
+    {
+      "id": 1,
+      "name": "Category 1"
+    },
+    {
+      "id": 2,
+      "name": "Category 2"
+    },
+    {
+      "id": 3,
+      "name": "Category 3"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Task 1",
+      "description": "",
+      "status": "pending",
+      "priority": null,
+      "category": null,
+      "due_date": null
+    },
+    {
+      "id": 2,
+      "title": "Task 2",
+      "description": "description...",
+      "status": "in_progress",
+      "priority": "optional",
+      "category": 1,
+      "due_date": "2026-04-02"
+    },
+    {
+      "id": 3,
+      "title": "Task 3",
+      "description": "",
+      "status": "completed",
+      "priority": "low",
+      "category": 2,
+      "due_date": null
+    },
+    {
+      "id": 4,
+      "title": "Task 4",
+      "description": "",
+      "status": "pending",
+      "priority": "medium",
+      "category": 1,
+      "due_date": "2026-04-05"
+    },
+    {
+      "id": 5,
+      "title": "Task 2",
+      "description": "",
+      "status": "pending",
+      "priority": "high",
+      "category": 2,
+      "due_date": null
+    },
+    {
+      "id": 6,
+      "title": "Task 6",
+      "description": "",
+      "status": "pending",
+      "priority": "critical",
+      "category": null,
+      "due_date": null
+    }
+  ]
+}
