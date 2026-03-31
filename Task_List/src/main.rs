@@ -1,9 +1,8 @@
 #![windows_subsystem = "windows"] // In order to compile for windows
 
-
 mod app;
 mod message;
-
+mod view;
 
 use app::TaskPlanner;
 use iced::{Theme, Size, window};
@@ -13,6 +12,7 @@ pub fn main() -> iced::Result {
         .title(|_state: &TaskPlanner| String::from("Task List"))
         .theme(|_state: &TaskPlanner| Theme::Dark)
         .window(window::Settings {
+            //maximized: true,
             size: Size::new(1280.0, 720.0),
             ..Default::default()
         })

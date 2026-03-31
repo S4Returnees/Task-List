@@ -1,6 +1,7 @@
 use crate::message::Message;
-use iced::widget::{button, column, container, row, rule, Space};
-use iced::{Element, Length};
+use crate::view::view::render_view;
+
+use iced::Element;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Tab {
@@ -10,7 +11,7 @@ pub enum Tab {
 }
 
 pub struct TaskPlanner {
-    active_tab: Tab,
+    pub active_tab: Tab,
 }
 
 impl Default for TaskPlanner {
@@ -28,6 +29,10 @@ impl TaskPlanner {
         }
     }
 
+    pub fn view(&self) -> Element<'_, Message> {
+        render_view(self)
+    }
+/*
     pub fn view(&self) -> Element<'_, Message> {
         let sidebar = column![
             button("All Task")
@@ -60,4 +65,5 @@ impl TaskPlanner {
         ]
             .into()
     }
+    */
 }
