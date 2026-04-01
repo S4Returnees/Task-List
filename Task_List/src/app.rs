@@ -3,11 +3,12 @@ use crate::view::view::render_view;
 
 use iced::Element;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Tab {
     AllTasks,
     Calendar,
     Settings,
+    Category(String),
 }
 
 pub struct TaskPlanner {
@@ -32,38 +33,4 @@ impl TaskPlanner {
     pub fn view(&self) -> Element<'_, Message> {
         render_view(self)
     }
-/*
-    pub fn view(&self) -> Element<'_, Message> {
-        let sidebar = column![
-            button("All Task")
-                .on_press(Message::TabSelected(Tab::AllTasks))
-                .width(Length::Fill),
-
-            button("Calendar")
-                .on_press(Message::TabSelected(Tab::Calendar))
-            .width(Length::Fill),
-
-            Space::new().height(Length::Fill),
-
-            button("Settings")
-                .on_press(Message::TabSelected(Tab::Settings))
-                .width(Length::Fill),
-        ]
-            .padding(10)
-            .spacing(10)
-            .width(Length::Fixed(200.0))
-            .height(Length::Fill);
-
-        let content = container("")
-            .width(Length::Fill)
-            .height(Length::Fill);
-
-        row![
-            sidebar,
-            rule::vertical(1),
-            content,
-        ]
-            .into()
-    }
-    */
 }
