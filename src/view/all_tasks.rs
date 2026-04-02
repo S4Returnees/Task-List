@@ -38,6 +38,7 @@ fn add_task_button<'a>() -> Element<'a, Message> {
                 .height(Length::Fill)
                 .align_x(iced::alignment::Horizontal::Center),
         )
+        .on_press(Message::OpenAddTaskPopup(None))
         .width(Length::Fixed(60.0))
         .height(Length::Fixed(60.0))
         .style(|theme, status| {

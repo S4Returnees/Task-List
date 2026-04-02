@@ -1,3 +1,4 @@
+mod add_task_popup;
 pub mod all_tasks;
 pub mod calendar;
 pub mod settings;
