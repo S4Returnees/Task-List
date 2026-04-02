@@ -1,5 +1,5 @@
+use crate::app::{Tab, TaskPlanner};
 use crate::message::Message;
-use crate::app::{TaskPlanner, Tab};
 use crate::view::*;
 
 use iced::widget::{container, row, rule};
@@ -13,16 +13,14 @@ pub fn render_view(state: &TaskPlanner) -> Element<'_, Message> {
         Tab::Category(_category) => todo!(),
     };
 
-    let content = container(
-        tab_content
-    )
+    let content = container(tab_content)
         .width(Length::Fill)
         .height(Length::Fill);
 
     row![
-            sidebar::view(state),
-            rule::vertical(1),
-            content,
-        ]
-        .into()
+        sidebar::view(state), 
+        rule::vertical(1), 
+        content,
+    ]
+    .into()
 }

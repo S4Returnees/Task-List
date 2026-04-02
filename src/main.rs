@@ -5,7 +5,7 @@ mod message;
 mod view;
 
 use app::TaskPlanner;
-use iced::{Theme, Size, window};
+use iced::{Size, Theme, window};
 
 pub fn main() -> iced::Result {
     iced::application(TaskPlanner::default, TaskPlanner::update, TaskPlanner::view)
