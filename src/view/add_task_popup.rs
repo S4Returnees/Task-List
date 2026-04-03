@@ -1,41 +1,67 @@
 use crate::TaskPlanner;
 use crate::message::Message;
 
-use iced::widget::{button, column, container, text, text_input};
+use iced::widget::{Space, button, column, combo_box, container, row, rule, text, text_input};
 use iced::{Color, Element, Length};
 
-pub fn view<'a>(state: &TaskPlanner) -> Element<'a, Message> {
+pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
     let popup_box = container(
         column![
-            text("New Task").size(25),
-            text_input("Task Name", &state.add_task_name),
-            button("Add Task").width(Length::Fixed(200.0)),
+            header(),
+            text_input("Task Name", &state.add_task_name).on_input(Message::TaskNameChanged),
+            category_combo_box(state),
+            Space::new().height(Length::Fill),
+            button("Add Task").width(Length::Fill),
         ]
-        .spacing(20)
+        .spacing(25)
         .padding(20),
     )
     .width(Length::Fixed(400.0))
     .height(Length::Fill)
-    .style(|_theme| {
-        let dark_overlay = Color::from_rgba(0.0, 0.0, 0.0, 1.0);
-
-        container::Style {
-            background: Some(dark_overlay.into()),
-            ..container::Style::default()
-        }
-    });
+    .style(|_theme| dark_overlay(0.8));
 
     container(popup_box)
         .height(Length::Fill)
         .width(Length::Fill)
         .center(Length::Fill)
-        .style(|_theme| {
-            let dark_overlay = Color::from_rgba(0.0, 0.0, 0.0, 0.6);
-
-            container::Style {
-                background: Some(dark_overlay.into()),
-                ..container::Style::default()
-            }
-        })
+        .style(|_theme| dark_overlay(0.4))
         .into()
+}
+
+fn dark_overlay(alpha: f32) -> container::Style {
+    let dark_overlay = Color::from_rgba(0.0, 0.0, 0.0, alpha);
+
+    container::Style {
+        background: Some(dark_overlay.into()),
+        ..container::Style::default()
+    }
+}
+fn header() -> Element<'static, Message> {
+    container(
+        column![
+            row![
+                text("New Task").size(25),
+                Space::new().width(Length::Fill),
+                button("X").on_press(Message::CloseAddTaskPopup),
+            ],
+            rule::horizontal(1)
+        ]
+        .spacing(10),
+    )
+    .into()
+}
+
+fn category_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
+    column![
+        text("Category").size(14),
+        combo_box(
+            &state.category_combo_state,
+            "",
+            state.category_selected_item.as_ref(),
+            Message::CategoryItemSelected
+        )
+        .width(Length::Fill),
+        //state.category_combo_state.push(new_category); to add a category
+    ]
+    .into()
 }
