@@ -6,7 +6,7 @@ struct TypeList{
     Week,
     Important,
     ShoppingList,
-    Personalised(Strign),
+    Personalised(String),
 }
 
 struct Task_List {
@@ -22,6 +22,12 @@ impl Task_list {
             list,
             done: done.unwrap_or(bool::false),
             }
+    }
+    fn add_task(self, Task){
+        self.list.push(Task);
+    }
+    fn rm_task(self, )name : String{
+        todo!()
     }
 }
 
