@@ -11,4 +11,5 @@ pub enum Message {
     PriorityItemSelected(String),
     TaskDueDateChanged(String),
     TaskDescriptionChanged(text_editor::Action),
+    AddTaskButtonPressed,
 }

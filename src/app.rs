@@ -57,14 +57,7 @@ impl TaskPlanner {
                 self.show_add_task_popup = true;
                 self.add_task_category = category;
             }
-            Message::CloseAddTaskPopup => {
-                self.show_add_task_popup = false;
-                self.add_task_name.clear();
-                self.category_selected_item = Some("None".to_string());
-                self.priority_selected_item = Some("None".to_string());
-                self.add_task_due_date.clear();
-                self.add_task_description = text_editor::Content::new();
-            }
+            Message::CloseAddTaskPopup => self.close_add_task_popup(),
             Message::TaskNameChanged(new_name) => self.add_task_name = new_name,
             Message::CategoryItemSelected(category) => self.category_selected_item = Some(category),
             Message::PriorityItemSelected(priority) => self.priority_selected_item = Some(priority),
@@ -72,7 +65,24 @@ impl TaskPlanner {
             Message::TaskDescriptionChanged(description) => {
                 self.add_task_description.perform(description)
             }
+            Message::AddTaskButtonPressed => self.add_task_handler(),
         }
+    }
+
+    fn close_add_task_popup(&mut self) {
+        self.show_add_task_popup = false;
+        self.add_task_name.clear();
+        self.category_selected_item = Some("None".to_string());
+        self.priority_selected_item = Some("None".to_string());
+        self.add_task_due_date.clear();
+        self.add_task_description = text_editor::Content::new();
+    }
+
+    fn add_task_handler(&mut self) {
+        if self.add_task_name.is_empty() {
+            return;
+        }
+        self.close_add_task_popup()
     }
 
     pub fn view(&self) -> Element<'_, Message> {

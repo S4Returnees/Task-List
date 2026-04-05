@@ -18,7 +18,9 @@ pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
             text_editor(&state.add_task_description)
                 .on_action(Message::TaskDescriptionChanged)
                 .height(Length::Fill),
-            button("Add Task").width(Length::Fill),
+            button("Add Task")
+                .on_press(Message::AddTaskButtonPressed)
+                .width(Length::Fill),
         ]
         .spacing(25)
         .padding(20),
