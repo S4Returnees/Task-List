@@ -1,7 +1,9 @@
 use crate::TaskPlanner;
 use crate::message::Message;
 
-use iced::widget::{Space, button, column, combo_box, container, row, rule, text, text_input};
+use iced::widget::{
+    Space, button, column, combo_box, container, row, rule, text, text_editor, text_input,
+};
 use iced::{Color, Element, Length};
 
 pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
@@ -10,7 +12,12 @@ pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
             header(),
             text_input("Task Name", &state.add_task_name).on_input(Message::TaskNameChanged),
             category_combo_box(state),
-            Space::new().height(Length::Fill),
+            priority_combo_box(state),
+            text_input("Due Date (yyyy-MM-dd)", &state.add_task_due_date)
+                .on_input(Message::TaskDueDateChanged),
+            text_editor(&state.add_task_description)
+                .on_action(Message::TaskDescriptionChanged)
+                .height(Length::Fill),
             button("Add Task").width(Length::Fill),
         ]
         .spacing(25)
@@ -62,6 +69,20 @@ fn category_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
         )
         .width(Length::Fill),
         //state.category_combo_state.push(new_category); to add a category
+    ]
+    .into()
+}
+
+fn priority_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
+    column![
+        text("Priority").size(14),
+        combo_box(
+            &state.priority_combo_state,
+            "",
+            state.priority_selected_item.as_ref(),
+            Message::PriorityItemSelected
+        )
+        .width(Length::Fill),
     ]
     .into()
 }
