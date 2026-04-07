@@ -12,4 +12,5 @@ pub enum Message {
     TaskDueDateChanged(String),
     TaskDescriptionChanged(text_editor::Action),
     AddTaskButtonPressed,
+    SortBySelectedItem(String),
 }

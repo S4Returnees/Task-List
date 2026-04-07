@@ -1,12 +1,12 @@
 use crate::TaskPlanner;
 use crate::message::Message;
 
-use iced::widget::{Space, button, column, container, rule, text};
+use iced::widget::{Space, button, column, combo_box, container, row, rule, text};
 use iced::{Element, Length};
 
-pub fn view(_state: &TaskPlanner) -> Element<'_, Message> {
+pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     column![
-        tab_title(),
+        tab_title(state),
         Space::new().height(Length::Fill),
         add_task_button(),
     ]
@@ -14,19 +14,38 @@ pub fn view(_state: &TaskPlanner) -> Element<'_, Message> {
     .into()
 }
 
-pub fn tab_title<'a>() -> Element<'a, Message> {
+pub fn tab_title(state: &TaskPlanner) -> Element<'_, Message> {
     column![
-        container(
+        container(row![
             text("All Tasks")
                 .size(25)
                 .width(Length::Fill)
                 .align_x(iced::alignment::Horizontal::Left),
-        )
+            Space::new().width(Length::Fill),
+            sort_by_combo_box(state)
+        ])
         .width(Length::Fill)
         .padding(20),
         rule::horizontal(1),
     ]
     .width(Length::Fill)
+    .into()
+}
+
+pub fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
+    column![
+        text("Sort by")
+            .size(14)
+            .width(Length::Fill)
+            .align_x(iced::alignment::Horizontal::Center),
+        combo_box(
+            &state.sort_by_combo_state,
+            "",
+            state.sort_by_selected_item.as_ref(),
+            Message::SortBySelectedItem
+        ),
+    ]
+    .width(Length::Fixed(100.0))
     .into()
 }
 

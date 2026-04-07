@@ -23,6 +23,8 @@ pub struct TaskPlanner {
     pub priority_selected_item: Option<String>,
     pub add_task_due_date: String,
     pub add_task_description: text_editor::Content,
+    pub sort_by_combo_state: combo_box::State<String>,
+    pub sort_by_selected_item: Option<String>,
 }
 
 impl Default for TaskPlanner {
@@ -45,6 +47,13 @@ impl Default for TaskPlanner {
             priority_selected_item: Some("None".to_string()),
             add_task_due_date: String::new(),
             add_task_description: text_editor::Content::new(),
+            sort_by_combo_state: combo_box::State::new(vec![
+                "Name".to_string(),
+                "Priority".to_string(),
+                "Due Date".to_string(),
+                "Status".to_string(),
+            ]),
+            sort_by_selected_item: Some("Name".to_string()),
         }
     }
 }
@@ -66,6 +75,10 @@ impl TaskPlanner {
                 self.add_task_description.perform(description)
             }
             Message::AddTaskButtonPressed => self.add_task_handler(),
+            Message::SortBySelectedItem(sort_by) => {
+                self.sort_by_selected_item = Some(sort_by);
+                //sort
+            }
         }
     }
 
