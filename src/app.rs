@@ -1,6 +1,7 @@
 use crate::message::Message;
+use crate::task_manager::task::{Priority, Task};
+use crate::task_manager::task_list::TaskList;
 use crate::view::view::render_view;
-
 use iced::Element;
 use iced::widget::{combo_box, text_editor};
 
@@ -13,14 +14,15 @@ pub enum Tab {
 }
 
 pub struct TaskPlanner {
+    pub task_list: TaskList,
     pub active_tab: Tab,
     pub show_add_task_popup: bool,
     pub add_task_name: String,
     pub add_task_category: Option<String>,
     pub category_combo_state: combo_box::State<String>,
     pub category_selected_item: Option<String>,
-    pub priority_combo_state: combo_box::State<String>,
-    pub priority_selected_item: Option<String>,
+    pub priority_combo_state: combo_box::State<Priority>,
+    pub priority_selected_item: Option<Priority>,
     pub add_task_due_date: String,
     pub add_task_description: text_editor::Content,
     pub sort_by_combo_state: combo_box::State<String>,
@@ -30,21 +32,15 @@ pub struct TaskPlanner {
 impl Default for TaskPlanner {
     fn default() -> Self {
         Self {
+            task_list: TaskList::new(),
             active_tab: Tab::AllTasks,
             show_add_task_popup: false,
             add_task_name: String::new(),
             add_task_category: None,
             category_combo_state: combo_box::State::new(vec!["None".to_string()]),
             category_selected_item: Some("None".to_string()),
-            priority_combo_state: combo_box::State::new(vec![
-                "None".to_string(),
-                "Optional".to_string(),
-                "Low".to_string(),
-                "Medium".to_string(),
-                "High".to_string(),
-                "Critical".to_string(),
-            ]),
-            priority_selected_item: Some("None".to_string()),
+            priority_combo_state: combo_box::State::new(Priority::ALL.to_vec()),
+            priority_selected_item: Some(Priority::None),
             add_task_due_date: String::new(),
             add_task_description: text_editor::Content::new(),
             sort_by_combo_state: combo_box::State::new(vec![
@@ -86,7 +82,7 @@ impl TaskPlanner {
         self.show_add_task_popup = false;
         self.add_task_name.clear();
         self.category_selected_item = Some("None".to_string());
-        self.priority_selected_item = Some("None".to_string());
+        self.priority_selected_item = Some(Priority::None);
         self.add_task_due_date.clear();
         self.add_task_description = text_editor::Content::new();
     }
@@ -95,6 +91,14 @@ impl TaskPlanner {
         if self.add_task_name.is_empty() {
             return;
         }
+        let new_task = Task::new(
+            self.add_task_name.clone(),
+            self.add_task_description.text(),
+            None,
+            self.priority_selected_item.unwrap(),
+            None,
+        );
+        self.task_list.add(new_task);
         self.close_add_task_popup()
     }
 

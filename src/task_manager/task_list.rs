@@ -1,7 +1,7 @@
 use crate::task_manager::task::*;
 
 pub struct TaskList {
-    list: Vec<Task>,
+    pub list: Vec<Task>,
 }
 
 impl TaskList {

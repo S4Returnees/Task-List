@@ -3,6 +3,7 @@
 mod app;
 mod message;
 mod view;
+mod task_manager;
 
 use app::TaskPlanner;
 use iced::{Size, Theme, window};

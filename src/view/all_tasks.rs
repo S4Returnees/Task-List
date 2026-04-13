@@ -1,12 +1,13 @@
-use crate::TaskPlanner;
 use crate::message::Message;
+use crate::{TaskPlanner, task_manager};
 
 use iced::widget::{Space, button, column, combo_box, container, row, rule, text};
-use iced::{Element, Length};
+use iced::{Element, Fill, Length};
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     column![
         tab_title(state),
+        show_task(state),
         Space::new().height(Length::Fill),
         add_task_button(),
     ]
@@ -70,4 +71,21 @@ fn add_task_button<'a>() -> Element<'a, Message> {
     .width(Length::Fill)
     .align_x(iced::alignment::Horizontal::Center)
     .into()
+}
+
+fn show_task(state: &TaskPlanner) -> Element<'_, Message> {
+    let mut col = column![].spacing(10);
+
+    for task in &state.task_list.list {
+        col = col.push(task_button(state, task));
+    }
+
+    container(col).padding(20).into()
+}
+
+fn task_button<'a>(
+    state: &TaskPlanner,
+    task: &'a task_manager::task::Task,
+) -> Element<'a, Message> {
+    button(text(&task.name)).width(Length::Fill).into()
 }

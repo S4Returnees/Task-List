@@ -1,11 +1,32 @@
 use chrono::NaiveDate;
+use std::fmt::write;
+use std::iter::Product;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Priority {
+    None,
     Optional,
     Low,
     Medium,
     High,
     Critical,
+}
+
+impl Priority {
+    pub const ALL: [Priority; 6] = [
+        Priority::None,
+        Priority::Optional,
+        Priority::Low,
+        Priority::Medium,
+        Priority::High,
+        Priority::Critical,
+    ];
+}
+
+impl std::fmt::Display for Priority {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 pub enum Status {
@@ -19,7 +40,7 @@ pub struct Task {
     pub name: String,
     pub description: String,
     pub category_id: Option<usize>,
-    pub priority: Option<Priority>,
+    pub priority: Priority,
     pub status: Option<Status>,
     pub due_date: Option<NaiveDate>,
 }
@@ -29,7 +50,7 @@ impl Task {
         name: String,
         description: String,
         category_id: Option<usize>,
-        priority: Option<Priority>,
+        priority: Priority,
         due_date: Option<NaiveDate>,
     ) -> Self {
         Task {
@@ -54,7 +75,7 @@ impl Task {
         self.category_id = category_id;
     }
 
-    fn update_priority(&mut self, priority: Option<Priority>) {
+    fn update_priority(&mut self, priority: Priority) {
         self.priority = priority;
     }
     fn update_status(&mut self, status: Option<Status>) {
