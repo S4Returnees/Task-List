@@ -2,6 +2,7 @@ use crate::message::Message;
 use crate::task_manager::task::{Priority, Task};
 use crate::task_manager::task_list::TaskList;
 use crate::view::view::render_view;
+use chrono::NaiveDate;
 use iced::Element;
 use iced::widget::{combo_box, text_editor};
 
@@ -75,6 +76,7 @@ impl TaskPlanner {
                 self.sort_by_selected_item = Some(sort_by);
                 //sort
             }
+            Message::SelectTask(id) => {}
         }
     }
 
@@ -88,18 +90,25 @@ impl TaskPlanner {
     }
 
     fn add_task_handler(&mut self) {
-        if self.add_task_name.is_empty() {
+        if self.add_task_name.is_empty() || self.verify_due_date() {
             return;
         }
         let new_task = Task::new(
             self.add_task_name.clone(),
             self.add_task_description.text(),
-            None,
+            None, //category id
             self.priority_selected_item.unwrap(),
-            None,
+            NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
         );
         self.task_list.add(new_task);
         self.close_add_task_popup()
+    }
+
+    fn verify_due_date(&mut self) -> bool {
+        !self.add_task_due_date.is_empty()
+            && NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d")
+                .ok()
+                .is_none()
     }
 
     pub fn view(&self) -> Element<'_, Message> {

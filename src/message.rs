@@ -14,4 +14,5 @@ pub enum Message {
     TaskDescriptionChanged(text_editor::Action),
     AddTaskButtonPressed,
     SortBySelectedItem(String),
+    SelectTask(usize)
 }

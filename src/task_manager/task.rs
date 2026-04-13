@@ -1,6 +1,4 @@
 use chrono::NaiveDate;
-use std::fmt::write;
-use std::iter::Product;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Priority {
