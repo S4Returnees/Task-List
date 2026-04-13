@@ -83,38 +83,8 @@ impl TaskPlanner {
                 self.sort_by_selected_item = Some(sort_by);
                 //sort
             }
-            Message::SelectTask(id) => {
-                let task = self.task_list.list.iter().find(|t| t.id == id).unwrap();
-                self.add_task_name = task.name.clone();
-                self.task_status = Some(task.status.clone());
-                self.category_selected_item = Some("None".to_string()); //self.category_selected_item = task.category_id
-                self.priority_selected_item = Some(task.priority);
-                self.add_task_due_date = task.get_due_date();
-                self.add_task_description =
-                    text_editor::Content::with_text(task.description.as_str());
-
-                self.show_task_detail_popup = Some(id);
-            }
-            Message::CloseTaskDetailPopup => {
-                if self.verify_due_date() {
-                    return;
-                }
-                let task = self
-                    .task_list
-                    .list
-                    .iter_mut()
-                    .find(|t| t.id == self.show_task_detail_popup.unwrap())
-                    .unwrap();
-
-                task.name = self.add_task_name.clone();
-                task.status = self.task_status.unwrap();
-                //task.category_id = self.category_selected_item
-                task.priority = self.priority_selected_item.unwrap();
-                task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
-                task.description = self.add_task_description.text();
-                self.close_add_task_popup();
-                self.show_task_detail_popup = None;
-            }
+            Message::SelectTask(id) => self.select_task_detail_popup_handler(id),
+            Message::CloseTaskDetailPopup => self.close_task_detail_popup_handler(),
         }
     }
 
@@ -140,6 +110,38 @@ impl TaskPlanner {
         );
         self.task_list.add(new_task);
         self.close_add_task_popup()
+    }
+    fn select_task_detail_popup_handler(&mut self, id: usize) {
+        let task = self.task_list.list.iter().find(|t| t.id == id).unwrap();
+        self.add_task_name = task.name.clone();
+        self.task_status = Some(task.status.clone());
+        self.category_selected_item = Some("None".to_string()); //self.category_selected_item = task.category_id
+        self.priority_selected_item = Some(task.priority);
+        self.add_task_due_date = task.get_due_date();
+        self.add_task_description = text_editor::Content::with_text(task.description.as_str());
+
+        self.show_task_detail_popup = Some(id);
+    }
+
+    fn close_task_detail_popup_handler(&mut self) {
+        if self.verify_due_date() {
+            return;
+        }
+        let task = self
+            .task_list
+            .list
+            .iter_mut()
+            .find(|t| t.id == self.show_task_detail_popup.unwrap())
+            .unwrap();
+
+        task.name = self.add_task_name.clone();
+        task.status = self.task_status.unwrap();
+        //task.category_id = self.category_selected_item
+        task.priority = self.priority_selected_item.unwrap();
+        task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
+        task.description = self.add_task_description.text();
+        self.close_add_task_popup();
+        self.show_task_detail_popup = None;
     }
 
     fn verify_due_date(&mut self) -> bool {
