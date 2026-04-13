@@ -1,10 +1,9 @@
 use crate::TaskPlanner;
 use crate::message::Message;
+use crate::view::popup_utils::*;
 
-use iced::widget::{
-    Space, button, column, combo_box, container, row, rule, text, text_editor, text_input,
-};
-use iced::{Color, Element, Length};
+use iced::widget::{Space, button, column, container, row, rule, text, text_editor, text_input};
+use iced::{Element, Length};
 
 pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
     let popup_box = container(
@@ -37,14 +36,6 @@ pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
         .into()
 }
 
-fn dark_overlay(alpha: f32) -> container::Style {
-    let dark_overlay = Color::from_rgba(0.0, 0.0, 0.0, alpha);
-
-    container::Style {
-        background: Some(dark_overlay.into()),
-        ..container::Style::default()
-    }
-}
 fn header() -> Element<'static, Message> {
     container(
         column![
@@ -57,34 +48,5 @@ fn header() -> Element<'static, Message> {
         ]
         .spacing(10),
     )
-    .into()
-}
-
-fn category_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
-    column![
-        text("Category").size(14),
-        combo_box(
-            &state.category_combo_state,
-            "",
-            state.category_selected_item.as_ref(),
-            Message::CategoryItemSelected
-        )
-        .width(Length::Fill),
-        //state.category_combo_state.push(new_category); to add a category
-    ]
-    .into()
-}
-
-fn priority_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
-    column![
-        text("Priority").size(14),
-        combo_box(
-            &state.priority_combo_state,
-            "",
-            state.priority_selected_item.as_ref(),
-            Message::PriorityItemSelected
-        )
-        .width(Length::Fill),
-    ]
     .into()
 }

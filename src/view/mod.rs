@@ -5,3 +5,4 @@ pub mod settings;
 pub mod sidebar;
 pub mod view;
 mod task_detail_popup;
+mod popup_utils;
