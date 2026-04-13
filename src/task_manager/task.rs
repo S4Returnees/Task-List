@@ -74,28 +74,6 @@ impl Task {
         }
     }
 
-    fn update_name(&mut self, name: String) {
-        self.name = name;
-    }
-    fn update_description(&mut self, description: String) {
-        self.description = description;
-    }
-
-    fn update_category_id(&mut self, category_id: Option<usize>) {
-        self.category_id = category_id;
-    }
-
-    fn update_priority(&mut self, priority: Priority) {
-        self.priority = priority;
-    }
-    fn update_status(&mut self, status: Status) {
-        self.status = status;
-    }
-
-    fn update_due_date(&mut self, due_date: Option<NaiveDate>) {
-        self.due_date = due_date;
-    }
-
     pub fn get_due_date(&self) -> String {
         match self.due_date {
             Some(date) => date.format("%Y-%m-%d").to_string(),
