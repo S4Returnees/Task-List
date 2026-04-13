@@ -19,10 +19,10 @@ pub fn render_view(state: &TaskPlanner) -> Element<'_, Message> {
 
     let main_content = row![sidebar::view(state), rule::vertical(1), content,];
 
-    let popup_content = add_task_popup::view(state);
-
     if state.show_add_task_popup {
-        stack![main_content, opaque(popup_content)].into()
+        stack![main_content, opaque(add_task_popup::view(state))].into()
+    } else if state.show_task_detail_popup.is_some() {
+        stack![main_content, opaque(task_detail_popup::view(state))].into()
     } else {
         main_content.into()
     }

@@ -1,5 +1,5 @@
 use crate::message::Message;
-use crate::task_manager::task::{Priority, Task};
+use crate::task_manager::task::{Priority, Status, Task};
 use crate::task_manager::task_list::TaskList;
 use crate::view::view::render_view;
 use chrono::NaiveDate;
@@ -18,7 +18,10 @@ pub struct TaskPlanner {
     pub task_list: TaskList,
     pub active_tab: Tab,
     pub show_add_task_popup: bool,
+    pub show_task_detail_popup: Option<usize>,
     pub add_task_name: String,
+    pub status_combo_state: combo_box::State<Status>,
+    pub task_status: Option<Status>,
     pub add_task_category: Option<String>,
     pub category_combo_state: combo_box::State<String>,
     pub category_selected_item: Option<String>,
@@ -36,7 +39,10 @@ impl Default for TaskPlanner {
             task_list: TaskList::new(),
             active_tab: Tab::AllTasks,
             show_add_task_popup: false,
+            show_task_detail_popup: None,
             add_task_name: String::new(),
+            status_combo_state: combo_box::State::new(Status::ALL.to_vec()),
+            task_status: None,
             add_task_category: None,
             category_combo_state: combo_box::State::new(vec!["None".to_string()]),
             category_selected_item: Some("None".to_string()),
@@ -65,6 +71,7 @@ impl TaskPlanner {
             }
             Message::CloseAddTaskPopup => self.close_add_task_popup(),
             Message::TaskNameChanged(new_name) => self.add_task_name = new_name,
+            Message::TaskStatusChanged(status) => self.task_status = Some(status),
             Message::CategoryItemSelected(category) => self.category_selected_item = Some(category),
             Message::PriorityItemSelected(priority) => self.priority_selected_item = Some(priority),
             Message::TaskDueDateChanged(due_date) => self.add_task_due_date = due_date,
@@ -76,7 +83,38 @@ impl TaskPlanner {
                 self.sort_by_selected_item = Some(sort_by);
                 //sort
             }
-            Message::SelectTask(id) => {}
+            Message::SelectTask(id) => {
+                let task = self.task_list.list.iter().find(|t| t.id == id).unwrap();
+                self.add_task_name = task.name.clone();
+                self.task_status = Some(task.status.clone());
+                self.category_selected_item = Some("None".to_string()); //self.category_selected_item = task.category_id
+                self.priority_selected_item = Some(task.priority);
+                self.add_task_due_date = task.get_due_date();
+                self.add_task_description =
+                    text_editor::Content::with_text(task.description.as_str());
+
+                self.show_task_detail_popup = Some(id);
+            }
+            Message::CloseTaskDetailPopup => {
+                if self.verify_due_date() {
+                    return;
+                }
+                let task = self
+                    .task_list
+                    .list
+                    .iter_mut()
+                    .find(|t| t.id == self.show_task_detail_popup.unwrap())
+                    .unwrap();
+
+                task.name = self.add_task_name.clone();
+                task.status = self.task_status.unwrap();
+                //task.category_id = self.category_selected_item
+                task.priority = self.priority_selected_item.unwrap();
+                task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
+                task.description = self.add_task_description.text();
+                self.close_add_task_popup();
+                self.show_task_detail_popup = None;
+            }
         }
     }
 
