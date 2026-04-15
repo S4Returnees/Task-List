@@ -85,6 +85,7 @@ impl TaskPlanner {
             }
             Message::SelectTask(id) => self.select_task_detail_popup_handler(id),
             Message::CloseTaskDetailPopup => self.close_task_detail_popup_handler(),
+            Message::StatusButton(id) => self.status_button_handler(id),
         }
     }
 
@@ -149,6 +150,16 @@ impl TaskPlanner {
             && NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d")
                 .ok()
                 .is_none()
+    }
+
+    fn status_button_handler(&mut self, id: usize) {
+        let task = self.task_list.list.iter_mut().find(|t| t.id == id).unwrap();
+        let next_status = match task.status.clone() {
+            Status::Pending => Status::InProgress,
+            Status::InProgress => Status::Done,
+            Status::Done => Status::Pending,
+        };
+        task.status = next_status;
     }
 
     pub fn view(&self) -> Element<'_, Message> {

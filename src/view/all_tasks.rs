@@ -101,7 +101,7 @@ fn task_button(task: &'_ Task) -> Element<'_, Message> {
             )
             .center(Length::Fill)
         )
-        .on_press(Message::OpenAddTaskPopup(None))
+        .on_press(Message::StatusButton(task.id))
         .width(40)
         .height(Length::Fill)
         .style(|theme, status| {

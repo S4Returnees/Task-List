@@ -40,7 +40,11 @@ impl Status {
 
 impl std::fmt::Display for Status {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self)
+        match self {
+            Status::Pending => write!(f, "Pending"),
+            Status::InProgress => write!(f, "In Progress"),
+            Status::Done => write!(f, "Done"),
+        }
     }
 }
 
