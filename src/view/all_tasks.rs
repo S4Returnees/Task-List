@@ -1,9 +1,10 @@
 use crate::TaskPlanner;
 use crate::message::Message;
-use crate::task_manager::task::Task;
+use crate::task_manager::task::{Status, Task};
 
-use iced::widget::{Space, button, column, combo_box, container, row, rule, text};
-use iced::{Element, Length};
+use iced::border::Radius;
+use iced::widget::{Space, button, column, combo_box, container, row, rule, svg, text};
+use iced::{Element, Length, alignment};
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     column![
@@ -22,7 +23,7 @@ pub fn tab_title(state: &TaskPlanner) -> Element<'_, Message> {
             text("All Tasks")
                 .size(25)
                 .width(Length::Fill)
-                .align_x(iced::alignment::Horizontal::Left),
+                .align_x(alignment::Horizontal::Left),
             Space::new().width(Length::Fill),
             sort_by_combo_box(state)
         ])
@@ -39,7 +40,7 @@ pub fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
         text("Sort by")
             .size(14)
             .width(Length::Fill)
-            .align_x(iced::alignment::Horizontal::Center),
+            .align_x(alignment::Horizontal::Center),
         combo_box(
             &state.sort_by_combo_state,
             "",
@@ -57,7 +58,7 @@ fn add_task_button<'a>() -> Element<'a, Message> {
             container(text("+").size(30))
                 .width(Length::Fill)
                 .height(Length::Fill)
-                .align_x(iced::alignment::Horizontal::Center),
+                .align_x(alignment::Horizontal::Center),
         )
         .on_press(Message::OpenAddTaskPopup(None))
         .width(Length::Fixed(60.0))
@@ -70,7 +71,7 @@ fn add_task_button<'a>() -> Element<'a, Message> {
     )
     .padding(20)
     .width(Length::Fill)
-    .align_x(iced::alignment::Horizontal::Center)
+    .align_x(alignment::Horizontal::Center)
     .into()
 }
 
@@ -85,8 +86,40 @@ fn show_task(state: &TaskPlanner) -> Element<'_, Message> {
 }
 
 fn task_button(task: &'_ Task) -> Element<'_, Message> {
-    button(text(&task.name))
-        .on_press(Message::SelectTask(task.id))
-        .width(Length::Fill)
-        .into()
+    let status_icon = match task.status {
+        Status::Pending => "assets/pending.svg",
+        Status::InProgress => "assets/in-progress.svg",
+        Status::Done => "assets/done.svg",
+    };
+
+    row![
+        button(
+            container(
+                svg(svg::Handle::from_path(status_icon))
+                    .width(20)
+                    .height(20)
+            )
+            .center(Length::Fill)
+        )
+        .on_press(Message::OpenAddTaskPopup(None))
+        .width(40)
+        .height(Length::Fill)
+        .style(|theme, status| {
+            let mut style = button::primary(theme, status);
+            style.border.radius = Radius::new(0.0).left(8.0);
+            style
+        }),
+        button(text(&task.name).align_y(alignment::Vertical::Center))
+            .on_press(Message::SelectTask(task.id))
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .style(|theme, status| {
+                let mut style = button::primary(theme, status);
+                style.border.radius = Radius::new(0.0).right(8.0);
+                style
+            }),
+    ]
+    .height(40)
+    .spacing(0)
+    .into()
 }
