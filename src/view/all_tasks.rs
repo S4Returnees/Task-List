@@ -1,11 +1,9 @@
 use crate::TaskPlanner;
 use crate::message::Message;
 use crate::task_manager::task::{Priority, Status, Task};
-use chrono::NaiveDate;
 
 use iced::border::Radius;
 use iced::widget::{Space, button, column, combo_box, container, row, rule, svg, text};
-use iced::window::Position::Default;
 use iced::{Border, Color, Element, Length, alignment};
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
