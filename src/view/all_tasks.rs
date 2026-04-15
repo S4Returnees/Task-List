@@ -1,6 +1,7 @@
 use crate::TaskPlanner;
 use crate::message::Message;
 use crate::task_manager::task::{Priority, Status, Task};
+use chrono::NaiveDate;
 
 use iced::border::Radius;
 use iced::widget::{Space, button, column, combo_box, container, row, rule, svg, text};
@@ -114,8 +115,10 @@ fn task_button(task: &'_ Task) -> Element<'_, Message> {
             row![
                 text(&task.name).align_y(alignment::Vertical::Center),
                 Space::new().width(Length::Fill),
+                task_due_date_indicator(task.get_due_date()),
                 task_priority_indicator(task.priority)
             ]
+            .spacing(10)
             .align_y(alignment::Vertical::Center)
             .height(Length::Fill),
         )
@@ -158,4 +161,11 @@ fn task_priority_indicator(priority: Priority) -> Element<'static, Message> {
             ..container::Style::default()
         })
         .into()
+}
+
+fn task_due_date_indicator(due_date: String) -> Element<'static, Message> {
+    if due_date.is_empty() {
+        return Space::new().into();
+    }
+    text(due_date).align_x(alignment::Horizontal::Right).into()
 }
