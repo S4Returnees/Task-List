@@ -1,10 +1,11 @@
 use crate::TaskPlanner;
 use crate::message::Message;
-use crate::task_manager::task::{Status, Task};
+use crate::task_manager::task::{Priority, Status, Task};
 
 use iced::border::Radius;
 use iced::widget::{Space, button, column, combo_box, container, row, rule, svg, text};
-use iced::{Element, Length, alignment};
+use iced::window::Position::Default;
+use iced::{Border, Color, Element, Length, alignment};
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     column![
@@ -109,17 +110,52 @@ fn task_button(task: &'_ Task) -> Element<'_, Message> {
             style.border.radius = Radius::new(0.0).left(8.0);
             style
         }),
-        button(text(&task.name).align_y(alignment::Vertical::Center))
-            .on_press(Message::SelectTask(task.id))
-            .width(Length::Fill)
-            .height(Length::Fill)
-            .style(|theme, status| {
-                let mut style = button::primary(theme, status);
-                style.border.radius = Radius::new(0.0).right(8.0);
-                style
-            }),
+        button(
+            row![
+                text(&task.name).align_y(alignment::Vertical::Center),
+                Space::new().width(Length::Fill),
+                task_priority_indicator(task.priority)
+            ]
+            .align_y(alignment::Vertical::Center)
+            .height(Length::Fill),
+        )
+        .on_press(Message::SelectTask(task.id))
+        .width(Length::Fill)
+        .height(Length::Fill)
+        .style(|theme, status| {
+            let mut style = button::primary(theme, status);
+            style.border.radius = Radius::new(0.0).right(8.0);
+            style
+        }),
     ]
     .height(40)
     .spacing(0)
     .into()
+}
+
+fn task_priority_indicator(priority: Priority) -> Element<'static, Message> {
+    if priority == Priority::None {
+        return Space::new().into();
+    }
+    let color = match priority {
+        Priority::Critical => Color::from_rgb8(224, 49, 49),
+        Priority::High => Color::from_rgb8(247, 103, 7),
+        Priority::Medium => Color::from_rgb8(245, 159, 0),
+        Priority::Low => Color::from_rgb8(34, 139, 230),
+        Priority::Optional => Color::from_rgb8(173, 181, 189),
+        Priority::None => unreachable!(),
+    };
+
+    container(Space::new())
+        .width(20)
+        .height(20)
+        .style(move |_theme| container::Style {
+            background: Some(color.into()),
+            border: Border {
+                radius: Radius::from(10.0),
+                ..Border::default()
+            },
+            ..container::Style::default()
+        })
+        .into()
 }
