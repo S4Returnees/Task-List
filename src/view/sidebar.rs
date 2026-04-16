@@ -2,34 +2,25 @@ use crate::TaskPlanner;
 use crate::app::Tab;
 use crate::message::Message;
 
-use iced::widget::{Space, button, column, rule, text};
-use iced::{Element, Length};
+use iced::widget::{Column, button, column, container, rule, scrollable, text};
+use iced::{Element, Length, alignment};
 
-pub fn view(_state: &TaskPlanner) -> Element<'_, Message> {
+pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     column![
         button("All Tasks")
             .on_press(Message::TabSelected(Tab::AllTasks))
             .width(Length::Fill),
-        
         button("Calendar")
             .on_press(Message::TabSelected(Tab::Calendar))
             .width(Length::Fill),
-        
         rule::horizontal(5),
-        
         text("Categories")
             .size(15)
             .width(Length::Fill)
             .align_x(iced::alignment::Horizontal::Center),
-        
-        button("Uncategorized")
-            .on_press(Message::TabSelected(Tab::Category(
-                "Uncategorized".to_string()
-            )))
-            .width(Length::Fill),
-        
-        Space::new().height(Length::Fill),
-        
+        categories(state),
+        add_category_button(),
+        rule::horizontal(5),
         button("Settings")
             .on_press(Message::TabSelected(Tab::Settings))
             .width(Length::Fill),
@@ -38,5 +29,42 @@ pub fn view(_state: &TaskPlanner) -> Element<'_, Message> {
     .spacing(10)
     .width(Length::Fixed(200.0))
     .height(Length::Fill)
+    .into()
+}
+
+fn categories(_state: &TaskPlanner) -> Element<'_, Message> {
+    let mut col: Column<Message> = column![].spacing(10);
+
+    let uncategorized = button("Uncategorized")
+        .on_press(Message::TabSelected(Tab::Category(0)))
+        .width(Length::Fill);
+
+    col = col.push(uncategorized);
+    //    for category in categories {
+    //        col.push()
+    //    }
+    scrollable(container(col)).height(Length::Fill).into()
+}
+
+fn add_category_button<'a>() -> Element<'a, Message> {
+    container(
+        button(
+            container(text("+").size(15))
+                .width(Length::Fill)
+                .height(Length::Fill)
+                .align_x(alignment::Horizontal::Center)
+                .align_y(alignment::Vertical::Center),
+        )
+        .width(Length::Fixed(30.0))
+        .height(Length::Fixed(30.0))
+        .style(|theme, status| {
+            let mut style = button::primary(theme, status);
+            style.border.radius = 15.0.into();
+            style
+        }),
+    )
+    .padding(5)
+    .width(Length::Fill)
+    .align_x(alignment::Horizontal::Center)
     .into()
 }

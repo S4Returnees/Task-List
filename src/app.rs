@@ -11,7 +11,7 @@ pub enum Tab {
     AllTasks,
     Calendar,
     Settings,
-    Category(String),
+    Category(usize),
 }
 
 pub struct TaskPlanner {

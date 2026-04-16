@@ -10,7 +10,7 @@ pub fn render_view(state: &TaskPlanner) -> Element<'_, Message> {
         Tab::AllTasks => all_tasks::view(state),
         Tab::Calendar => calendar::view(state),
         Tab::Settings => settings::view(state),
-        Tab::Category(_category) => todo!(),
+        Tab::Category(_id) => todo!(),
     };
 
     let content = container(tab_content)
