@@ -3,18 +3,13 @@ use crate::message::Message;
 use crate::task_manager::task::{Priority, Status, Task};
 
 use iced::border::Radius;
-use iced::widget::{Space, button, column, combo_box, container, row, rule, svg, text};
+use iced::widget::{Space, button, column, combo_box, container, row, rule, scrollable, svg, text};
 use iced::{Border, Color, Element, Length, alignment};
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
-    column![
-        tab_title(state),
-        show_task(state),
-        Space::new().height(Length::Fill),
-        add_task_button(),
-    ]
-    .spacing(10)
-    .into()
+    column![tab_title(state), show_task(state), add_task_button(),]
+        .spacing(10)
+        .into()
 }
 
 pub fn tab_title(state: &TaskPlanner) -> Element<'_, Message> {
@@ -82,7 +77,9 @@ fn show_task(state: &TaskPlanner) -> Element<'_, Message> {
         col = col.push(task_button(task));
     }
 
-    container(col).padding(20).into()
+    scrollable(container(col).padding(20))
+        .height(Length::Fill)
+        .into()
 }
 
 fn task_button(task: &'_ Task) -> Element<'_, Message> {
