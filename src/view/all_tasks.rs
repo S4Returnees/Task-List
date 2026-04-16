@@ -50,17 +50,18 @@ pub fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
 fn add_task_button<'a>() -> Element<'a, Message> {
     container(
         button(
-            container(text("+").size(30))
+            container(text("+").size(20))
                 .width(Length::Fill)
                 .height(Length::Fill)
-                .align_x(alignment::Horizontal::Center),
+                .align_x(alignment::Horizontal::Center)
+                .align_y(alignment::Vertical::Center),
         )
         .on_press(Message::OpenAddTaskPopup(None))
-        .width(Length::Fixed(60.0))
-        .height(Length::Fixed(60.0))
+        .width(Length::Fixed(40.0))
+        .height(Length::Fixed(40.0))
         .style(|theme, status| {
             let mut style = button::primary(theme, status);
-            style.border.radius = 30.0.into();
+            style.border.radius = 20.0.into();
             style
         }),
     )
