@@ -1,12 +1,28 @@
 use crate::TaskPlanner;
 use crate::message::Message;
 use crate::task_manager::task::{Priority, Status, Task};
+use crate::app::Tab;
 
 use iced::border::Radius;
 use iced::widget::{Space, button, column, combo_box, container, row, rule, scrollable, svg, text};
 use iced::{Border, Color, Element, Length, alignment};
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
+    let tasks: Vec<&Task> = match state.active_tab {
+        crate::app::Tab::AllTasks => {
+            state.task_list.list.iter().collect()
+        }
+
+        crate::app::Tab::Category(category_id) => {
+            state.task_list
+                .list
+                .iter()
+                .filter(|t| t.category_id == Some(category_id))
+                .collect()
+        }
+
+        _ => vec![],
+    };
     column![tab_title(state), show_task(state), add_task_button(),]
         .spacing(10)
         .into()
@@ -71,10 +87,10 @@ fn add_task_button<'a>() -> Element<'a, Message> {
     .into()
 }
 
-fn show_task(state: &TaskPlanner) -> Element<'_, Message> {
+fn show_task(state: &TaskPlanner,tasks: Vec<&Task>,) -> Element<'_, Message> {
     let mut col = column![].spacing(10);
 
-    for task in &state.task_list.list {
+    for task in tasks {
         col = col.push(task_button(task));
     }
 
