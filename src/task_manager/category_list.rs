@@ -17,15 +17,20 @@ impl CategoryList
 
     pub fn add(&mut self, mut new_category: Category)
     {
-        let mut category_id = 0;
+        let mut category_id = 1;
         for category in self.list.iter()
         {
-            if category.id == category_id
+            if category.id >= category_id
             {
-                category_id += 1;
+                category_id = category.id + 1;
             }
         }
         new_category.id = category_id;
         self.list.push(new_category);
+    }
+
+    pub fn remove(&mut self, category_id: usize)
+    {
+        self.list.retain(|x| x.id != category_id);
     }
 }
