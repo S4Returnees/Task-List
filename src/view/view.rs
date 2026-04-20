@@ -10,7 +10,15 @@ pub fn render_view(state: &TaskPlanner) -> Element<'_, Message> {
         Tab::AllTasks => all_tasks::view(state),
         Tab::Calendar => calendar::view(state),
         Tab::Settings => settings::view(state),
-        Tab::Category(_id) => todo!(),
+        Tab::Category(category_id) => {
+            let filtered_tasks: Vec<_> = state
+                .task_list
+                .list
+                .iter()
+                .filter(|t| t.category_id == Some(*category_id))
+                .collect();
+            all_tasks::view_filtered(state, filtered_tasks)
+        }
     };
 
     let content = container(tab_content)
