@@ -2,7 +2,7 @@ use crate::task_manager::category::*;
 
 pub struct CategoryList
 {
-    list: Vec<Category>,
+    pub list: Vec<Category>,
 }
 
 impl CategoryList
