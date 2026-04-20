@@ -1,5 +1,6 @@
 use chrono::NaiveDate;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Priority {
     Optional,
     Low,
@@ -7,7 +8,7 @@ pub enum Priority {
     High,
     Critical,
 }
-
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Status {
     Pending,
     InProgress,
