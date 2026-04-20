@@ -91,6 +91,22 @@ impl TaskPlanner {
             Message::SelectTask(id) => self.select_task_detail_popup_handler(id),
             Message::CloseTaskDetailPopup => self.close_task_detail_popup_handler(),
             Message::StatusButton(id) => self.status_button_handler(id),
+            Message::PrevMonth => {
+                if self.current_month == 1 {
+                    self.current_month = 12;
+                    self.current_year -= 1;
+                } else {
+                    self.current_month -= 1;
+                }
+            }
+            Message::NextMonth => {
+                if self.current_month == 12 {
+                    self.current_month = 1;
+                    self.current_year += 1;
+                } else {
+                    self.current_month += 1;
+                }
+            }
         }
     }
 

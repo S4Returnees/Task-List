@@ -25,12 +25,48 @@ fn title(state: &TaskPlanner) -> Element<'static, Message> {
             .size(25)
             .width(Length::Fill)
             .align_x(alignment::Horizontal::Center),
-        text(date_name)
-            .size(25)
-            .width(Length::Fill)
-            .align_x(alignment::Horizontal::Center),
+        row![
+            next_prev_button("<"),
+            text(date_name)
+                .size(25)
+                .width(Length::Fill)
+                .align_x(alignment::Horizontal::Center)
+                .align_y(alignment::Vertical::Center),
+            next_prev_button(">"),
+        ],
         rule::horizontal(1),
     ]
+    .into()
+}
+
+fn next_prev_button(next_prev: &'_ str) -> Element<'_, Message> {
+    container(
+        button(
+            container(text(next_prev).size(15))
+                .width(Length::Fill)
+                .height(Length::Fill)
+                .align_x(alignment::Horizontal::Center)
+                .align_y(alignment::Vertical::Center),
+        )
+        .on_press(if next_prev == "<" {
+            Message::PrevMonth
+        } else {
+            Message::NextMonth
+        })
+        .width(Length::Fixed(30.0))
+        .height(Length::Fixed(30.0))
+        .style(|theme, status| {
+            let mut style = button::primary(theme, status);
+            style.border.radius = 15.0.into();
+            style
+        }),
+    )
+    .width(Length::Fill)
+    .align_x(if next_prev == "<" {
+        alignment::Horizontal::Right
+    } else {
+        alignment::Horizontal::Left
+    })
     .into()
 }
 

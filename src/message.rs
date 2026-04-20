@@ -23,4 +23,7 @@ pub enum Message {
     SelectTask(usize),
     CloseTaskDetailPopup,
     StatusButton(usize),
+
+    NextMonth,
+    PrevMonth,
 }
