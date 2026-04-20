@@ -6,6 +6,7 @@ use crate::view::view::render_view;
 use chrono::{Datelike, Local, NaiveDate};
 use iced::Element;
 use iced::widget::{combo_box, text_editor};
+use crate::task_manager::category_list::CategoryList;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Tab {
@@ -34,6 +35,7 @@ pub struct TaskPlanner {
     pub sort_by_selected_item: Option<String>,
     pub current_year: i32,
     pub current_month: u32,
+    pub category_list: CategoryList,
 }
 
 impl Default for TaskPlanner {
@@ -49,6 +51,7 @@ impl Default for TaskPlanner {
             add_task_category: None,
             category_combo_state: combo_box::State::new(vec!["None".to_string()]),
             category_selected_item: Some("None".to_string()),
+            category_list: CategoryList::new(),
             priority_combo_state: combo_box::State::new(Priority::ALL.to_vec()),
             priority_selected_item: Some(Priority::None),
             add_task_due_date: String::new(),
@@ -123,10 +126,20 @@ impl TaskPlanner {
         if self.add_task_name.is_empty() || self.verify_due_date() {
             return;
         }
+        let category_id = match &self.category_selected_item {
+        Some(name) if name != "None" => {
+            self.category_list
+                .list
+                .iter()
+                .find(|c| &c.name == name)
+                .map(|c| c.id)
+            }
+        _ => None,
+        };
         let new_task = Task::new(
             self.add_task_name.clone(),
             self.add_task_description.text(),
-            None, //category id
+            category_id,
             self.priority_selected_item.unwrap(),
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
         );
