@@ -165,3 +165,4 @@ fn task_due_date_indicator(due_date: String) -> Element<'static, Message> {
     }
     text(due_date).align_x(alignment::Horizontal::Right).into()
 }
+

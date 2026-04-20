@@ -1,8 +1,9 @@
 use crate::TaskPlanner;
 use crate::message::Message;
 
+use crate::task_manager::task::Task;
 use chrono::{Datelike, Month, NaiveDate};
-use iced::widget::{Space, column, container, row, rule, text};
+use iced::widget::{Space, button, column, container, row, rule, scrollable, text};
 use iced::{Element, Length, alignment};
 use num_traits::FromPrimitive;
 
@@ -93,14 +94,34 @@ fn get_row_count(start_offset: u32, days_in_month: u32) -> u32 {
     let total_cells = start_offset + days_in_month;
     (total_cells + 6) / 7
 }
+
 fn day_cell(state: &TaskPlanner, date: NaiveDate) -> Element<'_, Message> {
     let day_number = text(date.day().to_string())
         .size(15)
         .width(Length::Fill)
         .align_x(alignment::Horizontal::Center);
 
-    let content = column![day_number].spacing(5);
-    container(content).width(Length::Fill).height(Length::Fill)
+    let task_list = state.task_list.get_task_by_date(date);
+    let mut tasks_col = column![]
+        .width(Length::Fill)
+        .height(Length::Fill)
+        .padding(5)
+        .spacing(3);
+    for task in task_list {
+        tasks_col = tasks_col.push(task_button(task))
+    }
+
+    let content = column![
+        day_number,
+        scrollable(tasks_col)
+            .height(Length::Fill)
+            .width(Length::Fill)
+    ]
+    .spacing(5);
+
+    container(content)
+        .width(Length::Fill)
+        .height(Length::Fill)
         .style(|_theme: &iced::Theme| {
             container::Style {
                 text_color: None,
@@ -115,4 +136,15 @@ fn day_cell(state: &TaskPlanner, date: NaiveDate) -> Element<'_, Message> {
             }
         })
         .into()
+}
+
+fn task_button(task: Task) -> Element<'static, Message> {
+    button(
+        text!("{}", &task.name)
+            .size(12)
+            .align_y(alignment::Vertical::Center),
+    )
+    .width(Length::Fill)
+    .height(15)
+    .into()
 }
