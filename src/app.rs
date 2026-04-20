@@ -110,6 +110,10 @@ impl TaskPlanner {
                     self.current_month += 1;
                 }
             }
+            Message::SortBySelectedItem(sort_by) => {
+                self.sort_by_selected_item = Some(sort_by.clone());
+                self.task_list.sort_by(&sort_by);
+            }
         }
     }
 
