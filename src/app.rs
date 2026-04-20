@@ -2,7 +2,8 @@ use crate::message::Message;
 use crate::task_manager::task::{Priority, Status, Task};
 use crate::task_manager::task_list::TaskList;
 use crate::view::view::render_view;
-use chrono::NaiveDate;
+
+use chrono::{Datelike, Local, NaiveDate};
 use iced::Element;
 use iced::widget::{combo_box, text_editor};
 
@@ -31,6 +32,8 @@ pub struct TaskPlanner {
     pub add_task_description: text_editor::Content,
     pub sort_by_combo_state: combo_box::State<String>,
     pub sort_by_selected_item: Option<String>,
+    pub current_year: i32,
+    pub current_month: u32,
 }
 
 impl Default for TaskPlanner {
@@ -57,6 +60,8 @@ impl Default for TaskPlanner {
                 "Status".to_string(),
             ]),
             sort_by_selected_item: Some("Name".to_string()),
+            current_year: Local::now().year(),
+            current_month: Local::now().month(),
         }
     }
 }
