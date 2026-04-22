@@ -1,7 +1,7 @@
 use crate::message::Message;
 use crate::task_manager::category::Category;
 use crate::task_manager::category_list::CategoryList;
-use crate::task_manager::task::{Priority, Status, Task};
+use crate::task_manager::task::{Priority, Recurrence, Status, Task};
 use crate::task_manager::task_list::{SortBy, TaskList};
 use crate::view::view::render_view;
 
@@ -160,6 +160,7 @@ impl TaskPlanner {
             ),
             self.priority_selected_item.unwrap(),
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
+            Recurrence::None, // todo 
         );
         self.task_list.add(new_task);
 

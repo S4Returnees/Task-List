@@ -1,13 +1,20 @@
 use chrono::NaiveDate;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Recurrence {
+    None,
+    Daily,
+    Weekly,
+    Monthly,
+}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Priority {
-    Critical,
-    High,
-    Medium,
-    Low,
-    Optional,
     None,
+    Optional,
+    Low,
+    Medium,
+    High,
+    Critical,
 }
 
 impl Priority {
@@ -57,6 +64,7 @@ pub struct Task {
     pub priority: Priority,
     pub status: Status,
     pub due_date: Option<NaiveDate>,
+    pub recurrence: Recurrence,
 }
 
 impl Task {
@@ -66,6 +74,7 @@ impl Task {
         category_id: usize,
         priority: Priority,
         due_date: Option<NaiveDate>,
+        recurrence: Recurrence,
     ) -> Self {
         Task {
             id: 0,
@@ -75,6 +84,7 @@ impl Task {
             priority,
             status: Status::Pending,
             due_date,
+            recurrence,
         }
     }
 
