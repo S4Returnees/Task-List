@@ -1,6 +1,14 @@
 use crate::task_manager::task::*;
 use chrono::NaiveDate;
 use crate::app::SortBy;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SortBy {
+    Name,
+    Priority,
+    DueDate,
+    Status,
+    Id,
+}
 
 pub struct TaskList {
     pub list: Vec<Task>,
@@ -52,6 +60,7 @@ impl TaskList {
             SortBy::Status => {
                 self.list.sort_by(|a, b| a.status.cmp(&b.status));
             }
+            SortBy::Id => self.sort_default(),
         }
     }
     pub fn sort_default(&mut self) {
