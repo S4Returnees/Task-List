@@ -17,23 +17,28 @@ pub enum Tab {
     Category(usize),
 }
 
+pub enum Popup {
+    None,
+    AddTask,
+    TaskDetails(usize),
+    AddCategory,
+    RenameCategory(usize),
+}
+
 pub struct TaskPlanner {
     pub task_list: TaskList,
     pub category_list: CategoryList,
     pub active_tab: Tab,
-    pub show_add_task_popup: bool,
-    pub show_task_detail_popup: Option<usize>,
+    pub popup: Popup,
     pub add_task_name: String,
     pub status_combo_state: combo_box::State<Status>,
     pub task_status: Option<Status>,
-    pub add_task_category: Option<String>,
     pub category_combo_state: combo_box::State<String>,
     pub category_selected_item: Option<String>,
     pub priority_combo_state: combo_box::State<Priority>,
     pub priority_selected_item: Option<Priority>,
     pub add_task_due_date: String,
     pub add_task_description: text_editor::Content,
-    pub show_add_category_popup: bool,
     pub add_category_name: String,
     pub sort_by_combo_state: combo_box::State<String>,
     pub sort_by_selected_item: Option<String>,
@@ -51,19 +56,16 @@ impl Default for TaskPlanner {
             task_list,
             category_list,
             active_tab: Tab::AllTasks,
-            show_add_task_popup: false,
-            show_task_detail_popup: None,
+            popup: Popup::None,
             add_task_name: String::new(),
             status_combo_state: combo_box::State::new(Status::ALL.to_vec()),
             task_status: None,
-            add_task_category: None,
             category_combo_state,
             category_selected_item: None,
             priority_combo_state: combo_box::State::new(Priority::ALL.to_vec()),
             priority_selected_item: Some(Priority::None),
             add_task_due_date: String::new(),
             add_task_description: text_editor::Content::new(),
-            show_add_category_popup: false,
             add_category_name: String::new(),
             sort_by_combo_state: combo_box::State::new(vec![
                 "Name".to_string(),
@@ -84,7 +86,7 @@ impl TaskPlanner {
             Message::TabSelected(tab) => self.active_tab = tab,
 
             Message::OpenAddTaskPopup(category_id) => {
-                self.show_add_task_popup = true;
+                self.popup = Popup::AddTask;
                 self.category_selected_item = Some(self.category_list.get_name(category_id));
             }
             Message::CloseAddTaskPopup => self.close_add_task_popup(),
@@ -109,10 +111,10 @@ impl TaskPlanner {
 
             Message::StatusButton(id) => self.status_button_handler(id),
 
-            Message::OpenAddCategoryPopup => self.show_add_category_popup = true,
+            Message::OpenAddCategoryPopup => self.popup = Popup::AddCategory,
             Message::CloseAddCategoryPopup => {
                 self.add_category_name.clear();
-                self.show_add_category_popup = false;
+                self.popup = Popup::None;
             }
             Message::CategoryNameChanged(new_name) => self.add_category_name = new_name,
             Message::AddCategoryButtonPressed => self.add_category_popup_handler(),
@@ -139,7 +141,7 @@ impl TaskPlanner {
     }
 
     fn close_add_task_popup(&mut self) {
-        self.show_add_task_popup = false;
+        self.popup = Popup::None;
         self.add_task_name.clear();
         self.category_selected_item = Some("None".to_string());
         self.priority_selected_item = Some(Priority::None);
@@ -175,18 +177,23 @@ impl TaskPlanner {
         self.add_task_due_date = task.get_due_date();
         self.add_task_description = text_editor::Content::with_text(task.description.as_str());
 
-        self.show_task_detail_popup = Some(id);
+        self.popup = Popup::TaskDetails(id);
     }
 
     fn close_task_detail_popup_handler(&mut self) {
         if self.verify_due_date() {
             return;
         }
+
+        let task_id = match self.popup {
+            Popup::TaskDetails(id) => id,
+            _ => unreachable!(),
+        };
         let task = self
             .task_list
             .list
             .iter_mut()
-            .find(|t| t.id == self.show_task_detail_popup.unwrap())
+            .find(|t| t.id == task_id)
             .unwrap();
 
         task.name = self.add_task_name.clone();
@@ -201,7 +208,7 @@ impl TaskPlanner {
         task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
         task.description = self.add_task_description.text();
         self.close_add_task_popup();
-        self.show_task_detail_popup = None;
+        self.popup = Popup::None;
     }
 
     fn verify_due_date(&mut self) -> bool {
@@ -227,7 +234,7 @@ impl TaskPlanner {
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
-        self.show_add_category_popup = false;
+        self.popup = Popup::None;
     }
 
     fn delete_category_handler(&mut self, id: usize) {

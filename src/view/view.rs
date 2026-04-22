@@ -1,4 +1,4 @@
-use crate::app::{Tab, TaskPlanner};
+use crate::app::{Popup, Tab, TaskPlanner};
 use crate::message::Message;
 use crate::view::*;
 
@@ -19,13 +19,13 @@ pub fn render_view(state: &TaskPlanner) -> Element<'_, Message> {
 
     let main_content = row![sidebar::view(state), rule::vertical(1), content,];
 
-    if state.show_add_task_popup {
-        stack![main_content, opaque(add_task_popup::view(state))].into()
-    } else if state.show_task_detail_popup.is_some() {
-        stack![main_content, opaque(task_detail_popup::view(state))].into()
-    } else if state.show_add_category_popup {
-        stack![main_content, opaque(add_category_popup::view(state))].into()
-    } else {
-        main_content.into()
+    match state.popup {
+        Popup::None => main_content.into(),
+        Popup::AddTask => stack![main_content, opaque(add_task_popup::view(state))].into(),
+        Popup::TaskDetails(id) => {
+            stack![main_content, opaque(task_detail_popup::view(state))].into()
+        }
+        Popup::AddCategory => stack![main_content, opaque(add_category_popup::view(state))].into(),
+        Popup::RenameCategory(id) => todo!(),
     }
 }
