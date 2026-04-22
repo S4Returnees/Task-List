@@ -1,5 +1,5 @@
 use crate::app::Tab;
-use crate::task_manager::task::{Priority, Status};
+use crate::task_manager::task::{Priority, Recurrence, Status};
 use crate::task_manager::task_list::SortBy;
 
 use iced::widget::text_editor;
@@ -16,6 +16,7 @@ pub enum Message {
     CategoryItemSelected(String),
     PriorityItemSelected(Priority),
     TaskDueDateChanged(String),
+    RecurrenceItemSelected(Recurrence),
     TaskDescriptionChanged(text_editor::Action),
     AddTaskButtonPressed,
 

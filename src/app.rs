@@ -38,6 +38,8 @@ pub struct TaskPlanner {
     pub priority_combo_state: combo_box::State<Priority>,
     pub priority_selected_item: Option<Priority>,
     pub add_task_due_date: String,
+    pub recurrence_combo_state: combo_box::State<Recurrence>,
+    pub recurrence_selected_item: Option<Recurrence>,
     pub add_task_description: text_editor::Content,
     pub add_category_name: String,
     pub sort_by_combo_state: combo_box::State<SortBy>,
@@ -65,6 +67,8 @@ impl Default for TaskPlanner {
             priority_combo_state: combo_box::State::new(Priority::ALL.to_vec()),
             priority_selected_item: Some(Priority::None),
             add_task_due_date: String::new(),
+            recurrence_combo_state: combo_box::State::new(Recurrence::ALL.to_vec()),
+            recurrence_selected_item: Some(Recurrence::None),
             add_task_description: text_editor::Content::new(),
             add_category_name: String::new(),
             sort_by_combo_state: combo_box::State::new(SortBy::ALL.to_vec()),
@@ -91,6 +95,13 @@ impl TaskPlanner {
             Message::CategoryItemSelected(category) => self.category_selected_item = Some(category),
             Message::PriorityItemSelected(priority) => self.priority_selected_item = Some(priority),
             Message::TaskDueDateChanged(due_date) => self.add_task_due_date = due_date,
+            Message::RecurrenceItemSelected(recurrence) => {
+                if self.verify_due_date() || self.add_task_name.is_empty() {
+                    self.recurrence_selected_item = Some(Recurrence::None)
+                } else {
+                    self.recurrence_selected_item = Some(recurrence)
+                }
+            }
             Message::TaskDescriptionChanged(description) => {
                 self.add_task_description.perform(description)
             }
@@ -160,7 +171,7 @@ impl TaskPlanner {
             ),
             self.priority_selected_item.unwrap(),
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
-            Recurrence::None, // todo
+            self.recurrence_selected_item.unwrap(),
         );
         self.task_list.add(new_task);
 
@@ -175,6 +186,7 @@ impl TaskPlanner {
         self.category_selected_item = Some(self.category_list.get_name(task.category_id));
         self.priority_selected_item = Some(task.priority);
         self.add_task_due_date = task.get_due_date();
+        self.recurrence_selected_item = Some(task.recurrence);
         self.add_task_description = text_editor::Content::with_text(task.description.as_str());
 
         self.popup = Popup::TaskDetails(id);
@@ -206,6 +218,7 @@ impl TaskPlanner {
         );
         task.priority = self.priority_selected_item.unwrap();
         task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
+        task.recurrence = self.recurrence_selected_item.unwrap();
         task.description = self.add_task_description.text();
 
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
