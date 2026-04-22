@@ -25,6 +25,14 @@ pub enum Popup {
     RenameCategory(usize),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SortBy {
+    Name,
+    Priority,
+    DueDate,
+    Status,
+}
+
 pub struct TaskPlanner {
     pub task_list: TaskList,
     pub category_list: CategoryList,
@@ -40,8 +48,8 @@ pub struct TaskPlanner {
     pub add_task_due_date: String,
     pub add_task_description: text_editor::Content,
     pub add_category_name: String,
-    pub sort_by_combo_state: combo_box::State<String>,
-    pub sort_by_selected_item: Option<String>,
+    pub sort_by_combo_state: combo_box::State<SortBy>,
+    pub sort_by_selected_item: Option<SortBy>,
     pub current_year: i32,
     pub current_month: u32,
 }
@@ -68,12 +76,12 @@ impl Default for TaskPlanner {
             add_task_description: text_editor::Content::new(),
             add_category_name: String::new(),
             sort_by_combo_state: combo_box::State::new(vec![
-                "Name".to_string(),
-                "Priority".to_string(),
-                "Due Date".to_string(),
-                "Status".to_string(),
+                SortBy::Name,
+                SortBy::Priority,
+                SortBy::DueDate,
+                SortBy::Status,
             ]),
-            sort_by_selected_item: Some("Name".to_string()),
+            sort_by_selected_item: Some(SortBy::Id),
             current_year: Local::now().year(),
             current_month: Local::now().month(),
         }
@@ -103,7 +111,7 @@ impl TaskPlanner {
 
             Message::SortBySelectedItem(sort_by) => {
                 self.sort_by_selected_item = Some(sort_by);
-                todo!()
+                self.task_list.sort_by(sort_by);
             }
 
             Message::SelectTask(id) => self.select_task_detail_popup_handler(id),
@@ -274,5 +282,16 @@ impl TaskPlanner {
 
     pub fn view(&self) -> Element<'_, Message> {
         render_view(self)
+    }
+}
+
+impl std::fmt::Display for SortBy {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            SortBy::Name => write!(f, "Name"),
+            SortBy::Priority => write!(f, "Priority"),
+            SortBy::DueDate => write!(f, "Due Date"),
+            SortBy::Status => write!(f, "Status"),
+        }
     }
 }
