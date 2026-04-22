@@ -175,6 +175,9 @@ impl TaskPlanner {
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
         );
         self.task_list.add(new_task);
+        if let Some(sort) = self.sort_by_selected_item {
+            self.task_list.sort_by(sort);
+        }    
         self.close_add_task_popup()
     }
     fn select_task_detail_popup_handler(&mut self, id: usize) {
