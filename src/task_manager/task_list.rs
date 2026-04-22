@@ -20,29 +20,34 @@ impl TaskList {
         self.list.push(new_task);
     }
     pub fn sort_by(&mut self, criteria: &str) {
-        match criteria {
-            "Name" => {
-                self.list.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
-            }
-
-            "Priority" => {
-                self.list.sort_by(|a, b| a.priority.cmp(&b.priority));
-            }
-
-            "Due Date" => {
-                self.list.sort_by(|a, b| match (a.due_date, b.due_date) {
-                    (Some(d1), Some(d2)) => d1.cmp(&d2),
-                    (None, Some(_)) => std::cmp::Ordering::Greater,
-                    (Some(_), None) => std::cmp::Ordering::Less,
-                    _ => std::cmp::Ordering::Equal,
-                });
-            }
-
-            "Status" => {
-                self.list.sort_by(|a, b| a.status.cmp(&b.status));
-            }
-
+        self.list.sort_by(|a, b| {
+        match (a.status, b.status) {
+            (Status::Done, Status::Done) => {}
+            (Status::Done, _) => return std::cmp::Ordering::Greater,
+            (_, Status::Done) => return std::cmp::Ordering::Less,
             _ => {}
         }
+        match criteria {
+            "Name" => a.name.cmp(&b.name),
+
+            "Priority" => a.priority.cmp(&b.priority),
+
+            "Due Date" => a.due_date.cmp(&b.due_date),
+
+            "Status" => a.status.cmp(&b.status),
+
+            _ => a.id.cmp(&b.id),
+            }
+        });
+    }
+    pub fn sort_default(&mut self) {
+    self.list.sort_by(|a, b| {
+        match (a.status, b.status) {
+            (Status::Done, Status::Done) => a.id.cmp(&b.id),
+            (Status::Done, _) => std::cmp::Ordering::Greater,
+            (_, Status::Done) => std::cmp::Ordering::Less,
+            _ => a.id.cmp(&b.id),
+            }
+        });
     }
 }
