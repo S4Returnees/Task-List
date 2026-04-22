@@ -53,7 +53,7 @@ pub struct Task {
     pub id: usize,
     pub name: String,
     pub description: String,
-    pub category_id: Option<usize>,
+    pub category_id: usize,
     pub priority: Priority,
     pub status: Status,
     pub due_date: Option<NaiveDate>,
@@ -63,7 +63,7 @@ impl Task {
     pub fn new(
         name: String,
         description: String,
-        category_id: Option<usize>,
+        category_id: usize,
         priority: Priority,
         due_date: Option<NaiveDate>,
     ) -> Self {

@@ -12,7 +12,7 @@ impl CategoryList {
     pub fn add(&mut self, mut new_category: Category) {
         let mut category_id = 1;
         for category in self.list.iter() {
-            if category.id >= category_id {
+            if category.id == category_id {
                 category_id = category.id + 1;
             }
         }
@@ -30,20 +30,25 @@ impl CategoryList {
         res
     }
 
-    pub fn get_name(&self, category_id: Option<usize>) -> String {
-        if let Some(id) = category_id {
-            self.list.iter().find(|x| x.id == id).unwrap().name.clone()
+    pub fn get_name(&self, category_id: usize) -> String {
+        if category_id == 0 {
+            String::from("None") // for uncategorized
         } else {
-            "None".to_string()
+            self.list
+                .iter()
+                .find(|x| x.id == category_id)
+                .unwrap()
+                .name
+                .clone()
         }
     }
 
-    pub fn get_id(&self, name: &str) -> Option<usize> {
+    pub fn get_id(&self, name: &str) -> usize {
         let category = self.list.iter().find(|x| x.name == name);
         if let Some(category) = category {
-            Some(category.id)
+            category.id
         } else {
-            None
+            0 // for uncategorized
         }
     }
 }

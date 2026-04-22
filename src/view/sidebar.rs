@@ -1,7 +1,9 @@
 use crate::TaskPlanner;
 use crate::app::Tab;
 use crate::message::Message;
+use std::os::linux::raw::stat;
 
+use crate::task_manager::category::Category;
 use iced::widget::{Column, button, column, container, rule, scrollable, text};
 use iced::{Element, Length, alignment};
 
@@ -32,7 +34,7 @@ pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     .into()
 }
 
-fn categories(_state: &TaskPlanner) -> Element<'_, Message> {
+fn categories(state: &TaskPlanner) -> Element<'_, Message> {
     let mut col: Column<Message> = column![].spacing(10);
 
     let uncategorized = button("Uncategorized")
@@ -40,10 +42,17 @@ fn categories(_state: &TaskPlanner) -> Element<'_, Message> {
         .width(Length::Fill);
 
     col = col.push(uncategorized);
-    //    for category in categories {
-    //        col.push()
-    //    }
+    for category in &state.category_list.list {
+        col = col.push(category_button(category));
+    }
     scrollable(container(col)).height(Length::Fill).into()
+}
+
+fn category_button(category: &Category) -> Element<'static, Message> {
+    button(text(category.name.clone()))
+        .on_press(Message::TabSelected(Tab::Category(category.id)))
+        .width(Length::Fill)
+        .into()
 }
 
 fn add_category_button<'a>() -> Element<'a, Message> {

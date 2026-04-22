@@ -41,7 +41,8 @@ pub struct TaskPlanner {
 impl Default for TaskPlanner {
     fn default() -> Self {
         let task_list = TaskList::new(); // Todo load
-        let category_list = CategoryList::new(); // Todo load
+        let mut category_list = CategoryList::new(); // Todo load
+        category_list.list.sort_unstable_by_key(|c| c.id);
         let category_combo_state = combo_box::State::new(category_list.get_names_list().to_vec());
         Self {
             task_list,
