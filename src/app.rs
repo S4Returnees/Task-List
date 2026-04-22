@@ -73,6 +73,7 @@ impl Default for TaskPlanner {
                 SortBy::Priority,
                 SortBy::DueDate,
                 SortBy::Status,
+                SortBy::Id,
             ]),
             sort_by_selected_item: Some(SortBy::Id),
             current_year: Local::now().year(),
@@ -288,6 +289,7 @@ impl std::fmt::Display for SortBy {
             SortBy::Priority => write!(f, "Priority"),
             SortBy::DueDate => write!(f, "Due Date"),
             SortBy::Status => write!(f, "Status"),
+            SortBy::Id => write!(f, "Default"),
         }
     }
 }
