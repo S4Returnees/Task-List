@@ -25,13 +25,6 @@ pub enum Popup {
     RenameCategory(usize),
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SortBy {
-    Name,
-    Priority,
-    DueDate,
-    Status,
-}
 
 pub struct TaskPlanner {
     pub task_list: TaskList,
