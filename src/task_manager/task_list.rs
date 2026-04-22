@@ -3,7 +3,7 @@ use chrono::{NaiveDate, Duration};
 use chrono::{Datelike};
 
 pub struct TaskList {
-    list: Vec<Task>,
+    pub list: Vec<Task>,
 }
 
 fn last_day_of_month(year: i32, month: u32) -> u32 {
@@ -50,6 +50,13 @@ impl TaskList {
         new_task.id = task_id;
         self.list.push(new_task);
     }
+
+    pub fn get_task_by_date(&self, date: NaiveDate) -> Vec<Task> {
+        self.list
+            .iter()
+            .filter(|task| task.due_date == Some(date))
+            .cloned()
+            .collect()
     pub fn handle_recurring_task(&mut self, task: &Task) {
         let Some(date) = task.due_date else {
             return;
