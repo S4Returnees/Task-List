@@ -1,7 +1,8 @@
 use crate::task_manager::task::*;
+use chrono::NaiveDate;
 
 pub struct TaskList {
-    list: Vec<Task>,
+    pub list: Vec<Task>,
 }
 
 impl TaskList {
@@ -18,5 +19,13 @@ impl TaskList {
         }
         new_task.id = task_id;
         self.list.push(new_task);
+    }
+
+    pub fn get_task_by_date(&self, date: NaiveDate) -> Vec<Task> {
+        self.list
+            .iter()
+            .filter(|task| task.due_date == Some(date))
+            .cloned()
+            .collect()
     }
 }
