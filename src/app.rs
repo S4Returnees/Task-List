@@ -2,7 +2,7 @@ use crate::message::Message;
 use crate::task_manager::category::Category;
 use crate::task_manager::category_list::CategoryList;
 use crate::task_manager::task::{Priority, Status, Task};
-use crate::task_manager::task_list::TaskList;
+use crate::task_manager::task_list::{SortBy, TaskList};
 use crate::view::view::render_view;
 
 use chrono::{Datelike, Local, NaiveDate};

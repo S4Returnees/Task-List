@@ -1,5 +1,7 @@
-use crate::app::{SortBy, Tab};
+use crate::app::Tab;
 use crate::task_manager::task::{Priority, Status};
+use crate::task_manager::task_list::SortBy;
+
 use iced::widget::text_editor;
 
 #[derive(Debug, Clone)]
@@ -22,7 +24,7 @@ pub enum Message {
     SelectTask(usize),
     CloseTaskDetailPopup,
     StatusButton(usize),
-    
+
     OpenAddCategoryPopup,
     CloseAddCategoryPopup,
     CategoryNameChanged(String),

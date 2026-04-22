@@ -1,6 +1,6 @@
 use crate::task_manager::task::*;
 use chrono::NaiveDate;
-use crate::app::SortBy;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SortBy {
     Name,
