@@ -2,7 +2,7 @@ use crate::TaskPlanner;
 use crate::message::Message;
 
 use crate::view::tasks_view_utils::{add_task_button, show_task, sort_by_combo_box};
-use iced::widget::{Space, column, container, row, rule, text};
+use iced::widget::{Space, button, column, container, row, rule, text};
 use iced::{Element, Length, alignment};
 
 pub fn view(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
@@ -22,19 +22,58 @@ fn tab_title(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
     }
 
     column![
-        container(row![
-            text(category_name)
-                .size(25)
-                .width(Length::Fill)
-                .align_x(alignment::Horizontal::Left),
-            Space::new().width(Length::Fill),
-            // todo rem and edit button
-            sort_by_combo_box(state)
-        ])
+        container(
+            row![
+                text(category_name)
+                    .size(25)
+                    .width(Length::Fill)
+                    .align_x(alignment::Horizontal::Left),
+                Space::new().width(Length::Fill),
+                sort_by_combo_box(state),
+                column!(rename_button(id), remove_button(id)).spacing(15)
+            ]
+            .spacing(10)
+        )
         .width(Length::Fill)
         .padding(20),
         rule::horizontal(1)
     ]
     .width(Length::Fill)
+    .into()
+}
+
+fn remove_button(id: usize) -> Element<'static, Message> {
+    button(
+        container(text("-").size(15)) // todo edit svg
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .align_x(alignment::Horizontal::Left)
+            .align_y(alignment::Vertical::Center),
+    )
+    .width(30)
+    .height(30)
+    .style(|theme, status| {
+        let mut style = button::primary(theme, status);
+        style.border.radius = 15.0.into();
+        style
+    })
+    .into()
+}
+
+fn rename_button(id: usize) -> Element<'static, Message> {
+    button(
+        container(text("~").size(15)) // todo delete svg
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .align_x(alignment::Horizontal::Left)
+            .align_y(alignment::Vertical::Center),
+    )
+    .width(30)
+    .height(30)
+    .style(|theme, status| {
+        let mut style = button::primary(theme, status);
+        style.border.radius = 15.0.into();
+        style
+    })
     .into()
 }
