@@ -2,12 +2,12 @@ use chrono::NaiveDate;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Priority {
-    None,
-    Optional,
-    Low,
-    Medium,
-    High,
     Critical,
+    High,
+    Medium,
+    Low,
+    Optional,
+    None,
 }
 
 impl Priority {

@@ -25,7 +25,6 @@ pub enum Popup {
     RenameCategory(usize),
 }
 
-
 pub struct TaskPlanner {
     pub task_list: TaskList,
     pub category_list: CategoryList,
@@ -68,13 +67,7 @@ impl Default for TaskPlanner {
             add_task_due_date: String::new(),
             add_task_description: text_editor::Content::new(),
             add_category_name: String::new(),
-            sort_by_combo_state: combo_box::State::new(vec![
-                SortBy::Name,
-                SortBy::Priority,
-                SortBy::DueDate,
-                SortBy::Status,
-                SortBy::Id,
-            ]),
+            sort_by_combo_state: combo_box::State::new(SortBy::ALL.to_vec()),
             sort_by_selected_item: Some(SortBy::Id),
             current_year: Local::now().year(),
             current_month: Local::now().month(),
@@ -169,9 +162,9 @@ impl TaskPlanner {
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
         );
         self.task_list.add(new_task);
-        if let Some(sort) = self.sort_by_selected_item {
-            self.task_list.sort_by(sort);
-        }    
+
+        self.task_list.sort_by(self.sort_by_selected_item.unwrap());
+
         self.close_add_task_popup()
     }
     fn select_task_detail_popup_handler(&mut self, id: usize) {
@@ -213,9 +206,9 @@ impl TaskPlanner {
         task.priority = self.priority_selected_item.unwrap();
         task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
         task.description = self.add_task_description.text();
-        if let Some(sort) = self.sort_by_selected_item {
-            self.task_list.sort_by(sort);
-        }
+
+        self.task_list.sort_by(self.sort_by_selected_item.unwrap());
+
         self.close_add_task_popup();
         self.popup = Popup::None;
     }
@@ -235,6 +228,7 @@ impl TaskPlanner {
             Status::Done => Status::Pending,
         };
         task.status = next_status;
+        self.task_list.sort_by(self.sort_by_selected_item.unwrap());
     }
 
     fn add_category_popup_handler(&mut self) {
@@ -281,17 +275,5 @@ impl TaskPlanner {
 
     pub fn view(&self) -> Element<'_, Message> {
         render_view(self)
-    }
-}
-
-impl std::fmt::Display for SortBy {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            SortBy::Name => write!(f, "Name"),
-            SortBy::Priority => write!(f, "Priority"),
-            SortBy::DueDate => write!(f, "Due Date"),
-            SortBy::Status => write!(f, "Status"),
-            SortBy::Id => write!(f, "Default"),
-        }
     }
 }

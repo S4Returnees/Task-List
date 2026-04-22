@@ -3,11 +3,32 @@ use chrono::NaiveDate;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SortBy {
+    Id,
     Name,
     Priority,
     DueDate,
     Status,
-    Id,
+}
+impl SortBy {
+    pub const ALL: [SortBy; 5] = [
+        SortBy::Id,
+        SortBy::Name,
+        SortBy::Priority,
+        SortBy::DueDate,
+        SortBy::Status,
+    ];
+}
+
+impl std::fmt::Display for SortBy {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            SortBy::Id => write!(f, "Default"),
+            SortBy::Name => write!(f, "Name"),
+            SortBy::Priority => write!(f, "Priority"),
+            SortBy::DueDate => write!(f, "Due Date"),
+            SortBy::Status => write!(f, "Status"),
+        }
+    }
 }
 
 pub struct TaskList {
@@ -41,7 +62,8 @@ impl TaskList {
     pub fn sort_by(&mut self, sort: SortBy) {
         match sort {
             SortBy::Name => {
-                self.list.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+                self.list
+                    .sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
             }
 
             SortBy::Priority => {
@@ -64,13 +86,11 @@ impl TaskList {
         }
     }
     pub fn sort_default(&mut self) {
-    self.list.sort_by(|a, b| {
-        match (a.status, b.status) {
+        self.list.sort_by(|a, b| match (a.status, b.status) {
             (Status::Done, Status::Done) => a.id.cmp(&b.id),
             (Status::Done, _) => std::cmp::Ordering::Greater,
             (_, Status::Done) => std::cmp::Ordering::Less,
             _ => a.id.cmp(&b.id),
-            }
         });
     }
 }
