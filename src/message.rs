@@ -13,7 +13,7 @@ pub enum Message {
     TaskStatusChanged(Status),
     CategoryItemSelected(String),
     PriorityItemSelected(Priority),
-    TaskDueDateChanged(String),
+    TaskDueDateChanged(SortBy),
     TaskDescriptionChanged(text_editor::Action),
     AddTaskButtonPressed,
 
