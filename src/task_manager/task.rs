@@ -1,12 +1,5 @@
 use chrono::NaiveDate;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Recurrence {
-    None,
-    Daily,
-    Weekly,
-    Monthly,
-}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Priority {
     None,
@@ -65,6 +58,29 @@ pub struct Task {
     pub status: Status,
     pub due_date: Option<NaiveDate>,
     pub recurrence: Recurrence,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Recurrence {
+    None,
+    Daily,
+    Weekly,
+    Monthly,
+}
+
+impl Recurrence {
+    pub const ALL: [Recurrence; 4] = [
+        Recurrence::None,
+        Recurrence::Daily,
+        Recurrence::Weekly,
+        Recurrence::Monthly,
+    ];
+}
+
+impl std::fmt::Display for Recurrence {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 impl Task {

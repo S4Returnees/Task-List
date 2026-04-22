@@ -24,6 +24,7 @@ pub fn view(state: &'_ TaskPlanner, id: usize) -> Element<'_, Message> {
             priority_combo_box(state),
             text_input("Due Date (yyyy-MM-dd)", &state.add_task_due_date)
                 .on_input(Message::TaskDueDateChanged),
+            recurring_combo_box(state),
             text_editor(&state.add_task_description)
                 .on_action(Message::TaskDescriptionChanged)
                 .height(Length::Fill),

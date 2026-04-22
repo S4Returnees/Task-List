@@ -88,7 +88,8 @@ impl TaskList {
             .collect()
     }
 
-    pub fn handle_recurring_task(&mut self, task: &Task) {
+    pub fn handle_recurring_task(&mut self, id: usize) {
+        let task = self.list.iter().find(|task| task.id == id).unwrap();
         let Some(date) = task.due_date else {
             return;
         };

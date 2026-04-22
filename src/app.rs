@@ -38,6 +38,8 @@ pub struct TaskPlanner {
     pub priority_combo_state: combo_box::State<Priority>,
     pub priority_selected_item: Option<Priority>,
     pub add_task_due_date: String,
+    pub recurrence_combo_state: combo_box::State<Recurrence>,
+    pub recurrence_selected_item: Option<Recurrence>,
     pub add_task_description: text_editor::Content,
     pub add_category_name: String,
     pub sort_by_combo_state: combo_box::State<SortBy>,
@@ -50,7 +52,7 @@ impl Default for TaskPlanner {
     fn default() -> Self {
         let task_list = TaskList::new(); // Todo load
         let mut category_list = CategoryList::new(); // Todo load
-        category_list.list.sort_unstable_by_key(|c| c.id);
+        category_list.list.sort_unstable_by_key(|c| c.name.clone());
         let category_combo_state = combo_box::State::new(category_list.get_names_list().to_vec());
         Self {
             task_list,
@@ -65,6 +67,8 @@ impl Default for TaskPlanner {
             priority_combo_state: combo_box::State::new(Priority::ALL.to_vec()),
             priority_selected_item: Some(Priority::None),
             add_task_due_date: String::new(),
+            recurrence_combo_state: combo_box::State::new(Recurrence::ALL.to_vec()),
+            recurrence_selected_item: Some(Recurrence::None),
             add_task_description: text_editor::Content::new(),
             add_category_name: String::new(),
             sort_by_combo_state: combo_box::State::new(SortBy::ALL.to_vec()),
@@ -91,6 +95,13 @@ impl TaskPlanner {
             Message::CategoryItemSelected(category) => self.category_selected_item = Some(category),
             Message::PriorityItemSelected(priority) => self.priority_selected_item = Some(priority),
             Message::TaskDueDateChanged(due_date) => self.add_task_due_date = due_date,
+            Message::RecurrenceItemSelected(recurrence) => {
+                if self.verify_due_date() || self.add_task_name.is_empty() {
+                    self.recurrence_selected_item = Some(Recurrence::None)
+                } else {
+                    self.recurrence_selected_item = Some(recurrence)
+                }
+            }
             Message::TaskDescriptionChanged(description) => {
                 self.add_task_description.perform(description)
             }
@@ -160,7 +171,7 @@ impl TaskPlanner {
             ),
             self.priority_selected_item.unwrap(),
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
-            Recurrence::None, // todo 
+            self.recurrence_selected_item.unwrap(),
         );
         self.task_list.add(new_task);
 
@@ -175,6 +186,7 @@ impl TaskPlanner {
         self.category_selected_item = Some(self.category_list.get_name(task.category_id));
         self.priority_selected_item = Some(task.priority);
         self.add_task_due_date = task.get_due_date();
+        self.recurrence_selected_item = Some(task.recurrence);
         self.add_task_description = text_editor::Content::with_text(task.description.as_str());
 
         self.popup = Popup::TaskDetails(id);
@@ -206,6 +218,7 @@ impl TaskPlanner {
         );
         task.priority = self.priority_selected_item.unwrap();
         task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
+        task.recurrence = self.recurrence_selected_item.unwrap();
         task.description = self.add_task_description.text();
 
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
@@ -223,18 +236,25 @@ impl TaskPlanner {
 
     fn status_button_handler(&mut self, id: usize) {
         let task = self.task_list.list.iter_mut().find(|t| t.id == id).unwrap();
-        let next_status = match task.status.clone() {
+
+        task.status = match task.status {
             Status::Pending => Status::InProgress,
             Status::InProgress => Status::Done,
             Status::Done => Status::Pending,
         };
-        task.status = next_status;
+
+        if task.status == Status::Done {
+            self.task_list.handle_recurring_task(id);
+        }
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
     }
 
     fn add_category_popup_handler(&mut self) {
         let new_category = Category::new(self.add_category_name.clone());
         self.category_list.add(new_category);
+        self.category_list
+            .list
+            .sort_unstable_by_key(|c| c.name.clone());
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
@@ -268,6 +288,9 @@ impl TaskPlanner {
             .find(|c| c.id == id)
             .unwrap();
         category.name = self.add_category_name.clone();
+        self.category_list
+            .list
+            .sort_unstable_by_key(|c| c.name.clone());
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
