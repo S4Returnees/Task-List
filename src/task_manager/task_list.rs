@@ -97,7 +97,7 @@ impl TaskList {
         let new_date = match task.recurrence {
             Recurrence::Daily => date + Duration::days(1),
             Recurrence::Weekly => date + Duration::days(7),
-            Recurrence::Monthly => add_one_month_clamped(date)
+            Recurrence::Monthly => add_one_month_clamped(date),
             Recurrence::None => return,
         };
 
