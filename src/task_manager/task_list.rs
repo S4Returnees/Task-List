@@ -1,5 +1,6 @@
 use crate::task_manager::task::*;
 use chrono::NaiveDate;
+use crate::app::SortBy;
 
 pub struct TaskList {
     pub list: Vec<Task>,
@@ -20,26 +21,29 @@ impl TaskList {
         new_task.id = task_id;
         self.list.push(new_task);
     }
-    pub fn sort_by(&mut self, criteria: &str) {
-        self.list.sort_by(|a, b| {
-        match (a.status, b.status) {
-            (Status::Done, Status::Done) => {}
-            (Status::Done, _) => return std::cmp::Ordering::Greater,
-            (_, Status::Done) => return std::cmp::Ordering::Less,
-            _ => {}
-        }
-        match criteria {
-            "Name" => a.name.cmp(&b.name),
-
-            "Priority" => a.priority.cmp(&b.priority),
-
-            "Due Date" => a.due_date.cmp(&b.due_date),
-
-            "Status" => a.status.cmp(&b.status),
-
-            _ => a.id.cmp(&b.id),
+    pub fn sort_by(&mut self, sort: SortBy) {
+        match sort {
+            SortBy::Name => {
+                self.list.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
             }
-        });
+
+            SortBy::Priority => {
+                self.list.sort_by(|a, b| a.priority.cmp(&b.priority));
+            }
+
+            SortBy::DueDate => {
+                self.list.sort_by(|a, b| match (a.due_date, b.due_date) {
+                    (Some(d1), Some(d2)) => d1.cmp(&d2),
+                    (None, Some(_)) => std::cmp::Ordering::Greater,
+                    (Some(_), None) => std::cmp::Ordering::Less,
+                    _ => std::cmp::Ordering::Equal,
+                });
+            }
+
+            SortBy::Status => {
+                self.list.sort_by(|a, b| a.status.cmp(&b.status));
+            }
+        }
     }
     pub fn sort_default(&mut self) {
     self.list.sort_by(|a, b| {
