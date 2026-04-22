@@ -2,7 +2,7 @@ use crate::message::Message;
 use crate::task_manager::category::Category;
 use crate::task_manager::category_list::CategoryList;
 use crate::task_manager::task::{Priority, Status, Task};
-use crate::task_manager::task_list::TaskList;
+use crate::task_manager::task_list::{SortBy, TaskList};
 use crate::view::view::render_view;
 
 use chrono::{Datelike, Local, NaiveDate};
@@ -40,8 +40,8 @@ pub struct TaskPlanner {
     pub add_task_due_date: String,
     pub add_task_description: text_editor::Content,
     pub add_category_name: String,
-    pub sort_by_combo_state: combo_box::State<String>,
-    pub sort_by_selected_item: Option<String>,
+    pub sort_by_combo_state: combo_box::State<SortBy>,
+    pub sort_by_selected_item: Option<SortBy>,
     pub current_year: i32,
     pub current_month: u32,
 }
@@ -67,13 +67,8 @@ impl Default for TaskPlanner {
             add_task_due_date: String::new(),
             add_task_description: text_editor::Content::new(),
             add_category_name: String::new(),
-            sort_by_combo_state: combo_box::State::new(vec![
-                "Name".to_string(),
-                "Priority".to_string(),
-                "Due Date".to_string(),
-                "Status".to_string(),
-            ]),
-            sort_by_selected_item: Some("Name".to_string()),
+            sort_by_combo_state: combo_box::State::new(SortBy::ALL.to_vec()),
+            sort_by_selected_item: Some(SortBy::Id),
             current_year: Local::now().year(),
             current_month: Local::now().month(),
         }
@@ -103,7 +98,7 @@ impl TaskPlanner {
 
             Message::SortBySelectedItem(sort_by) => {
                 self.sort_by_selected_item = Some(sort_by);
-                todo!()
+                self.task_list.sort_by(sort_by);
             }
 
             Message::SelectTask(id) => self.select_task_detail_popup_handler(id),
@@ -167,6 +162,9 @@ impl TaskPlanner {
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
         );
         self.task_list.add(new_task);
+
+        self.task_list.sort_by(self.sort_by_selected_item.unwrap());
+
         self.close_add_task_popup()
     }
     fn select_task_detail_popup_handler(&mut self, id: usize) {
@@ -208,6 +206,9 @@ impl TaskPlanner {
         task.priority = self.priority_selected_item.unwrap();
         task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
         task.description = self.add_task_description.text();
+
+        self.task_list.sort_by(self.sort_by_selected_item.unwrap());
+
         self.close_add_task_popup();
         self.popup = Popup::None;
     }
@@ -227,10 +228,7 @@ impl TaskPlanner {
             Status::Done => Status::Pending,
         };
         task.status = next_status;
-        if task.status == Status::Done {
-            let task_clone = task.clone();
-            self.task_list.handle_recurring_task(&task_clone);
-        }
+        self.task_list.sort_by(self.sort_by_selected_item.unwrap());
     }
 
     fn add_category_popup_handler(&mut self) {
