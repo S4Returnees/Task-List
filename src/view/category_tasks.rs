@@ -30,7 +30,7 @@ fn tab_title(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
                     .align_x(alignment::Horizontal::Left),
                 Space::new().width(Length::Fill),
                 sort_by_combo_box(state),
-                column!(rename_button(id), remove_button(id)).spacing(15)
+                column!(rename_button(id), delete_button(id)).spacing(15)
             ]
             .spacing(10)
         )
@@ -42,7 +42,7 @@ fn tab_title(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
     .into()
 }
 
-fn remove_button(id: usize) -> Element<'static, Message> {
+fn delete_button(id: usize) -> Element<'static, Message> {
     button(
         container(
             svg(svg::Handle::from_path("assets/delete.svg"))
@@ -51,6 +51,7 @@ fn remove_button(id: usize) -> Element<'static, Message> {
         )
         .center(Length::Fill),
     )
+    .on_press(Message::DeleteCategory(id))
     .width(40)
     .height(40)
     .style(|theme, status| {
@@ -70,6 +71,7 @@ fn rename_button(id: usize) -> Element<'static, Message> {
         )
         .center(Length::Fill),
     )
+    .on_press(Message::RenameCategory(id))
     .width(40)
     .height(40)
     .style(|theme, status| {

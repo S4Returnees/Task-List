@@ -116,6 +116,8 @@ impl TaskPlanner {
             }
             Message::CategoryNameChanged(new_name) => self.add_category_name = new_name,
             Message::AddCategoryButtonPressed => self.add_category_popup_handler(),
+            Message::RenameCategory(id) => todo!(),
+            Message::DeleteCategory(id) => self.delete_category_handler(id),
 
             Message::PrevMonth => {
                 if self.current_month == 1 {
@@ -223,8 +225,22 @@ impl TaskPlanner {
         let new_category = Category::new(self.add_category_name.clone());
         self.category_list.add(new_category);
         self.add_category_name.clear();
-        self.category_combo_state = combo_box::State::new(self.category_list.get_names_list().to_vec());
+        self.category_combo_state =
+            combo_box::State::new(self.category_list.get_names_list().to_vec());
         self.show_add_category_popup = false;
+    }
+
+    fn delete_category_handler(&mut self, id: usize) {
+        if id == 0 {
+            return;
+        }
+        self.task_list
+            .list
+            .iter_mut()
+            .filter(|t| t.category_id == id)
+            .for_each(|t| t.category_id = 0);
+        self.category_list.remove(id);
+        self.active_tab = Tab::Category(0)
     }
 
     pub fn view(&self) -> Element<'_, Message> {

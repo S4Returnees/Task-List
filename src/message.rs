@@ -27,6 +27,8 @@ pub enum Message {
     CloseAddCategoryPopup,
     CategoryNameChanged(String),
     AddCategoryButtonPressed,
+    RenameCategory(usize),
+    DeleteCategory(usize),
 
     NextMonth,
     PrevMonth,
