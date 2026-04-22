@@ -1,13 +1,20 @@
 use chrono::NaiveDate;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub enum Priority {
-    Critical,
-    High,
-    Medium,
-    Low,
-    Optional,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Recurrence {
     None,
+    Daily,
+    Weekly,
+    Monthly,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Priority {
+    None,
+    Optional,
+    Low,
+    Medium,
+    High,
+    Critical,
 }
 
 impl Priority {
@@ -27,7 +34,7 @@ impl std::fmt::Display for Priority {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
     Pending,
     InProgress,
@@ -57,6 +64,7 @@ pub struct Task {
     pub priority: Priority,
     pub status: Status,
     pub due_date: Option<NaiveDate>,
+    pub recurrence: Recurrence,
 }
 
 impl Task {
@@ -75,6 +83,7 @@ impl Task {
             priority,
             status: Status::Pending,
             due_date,
+            recurrence: Recurrence::None,
         }
     }
 
