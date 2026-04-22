@@ -22,6 +22,7 @@ pub enum Status {
     Done,
 }
 
+#[derive(Clone)]
 pub struct Task {
     pub id: usize,
     pub name: String,
