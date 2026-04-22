@@ -1,4 +1,4 @@
-use crate::app::Tab;
+use crate::app::{SortBy, Tab};
 use crate::task_manager::task::{Priority, Status};
 use iced::widget::text_editor;
 
