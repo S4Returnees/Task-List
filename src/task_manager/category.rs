@@ -1,22 +1,14 @@
-pub struct Category 
-{
+pub struct Category {
     pub id: usize,
     pub name: String,
 }
 
-impl Category
-{
-    pub fn new(id: usize, name: String) -> Self
-    {
-        Category
-        {
-            id,
-            name,
-        }
+impl Category {
+    pub fn new(id: usize, name: String) -> Self {
+        Category { id, name }
     }
 
-    pub fn update_name(&mut self, name: String)
-    {
+    pub fn update_name(&mut self, name: String) {
         self.name = name;
-    } 
+    }
 }
