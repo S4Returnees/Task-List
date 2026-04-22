@@ -160,7 +160,7 @@ impl TaskPlanner {
             ),
             self.priority_selected_item.unwrap(),
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
-            Recurrence::None, // todo 
+            Recurrence::None, // todo
         );
         self.task_list.add(new_task);
 
@@ -223,19 +223,25 @@ impl TaskPlanner {
 
     fn status_button_handler(&mut self, id: usize) {
         let task = self.task_list.list.iter_mut().find(|t| t.id == id).unwrap();
-        let next_status = match task.status.clone() {
+
+        task.status = match task.status {
             Status::Pending => Status::InProgress,
             Status::InProgress => Status::Done,
             Status::Done => Status::Pending,
         };
-        task.status = next_status;
+
+        if task.status == Status::Done {
+            self.task_list.handle_recurring_task(id);
+        }
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
     }
 
     fn add_category_popup_handler(&mut self) {
         let new_category = Category::new(self.add_category_name.clone());
         self.category_list.add(new_category);
-        self.category_list.list.sort_unstable_by_key(|c| c.name.clone());
+        self.category_list
+            .list
+            .sort_unstable_by_key(|c| c.name.clone());
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
@@ -269,7 +275,9 @@ impl TaskPlanner {
             .find(|c| c.id == id)
             .unwrap();
         category.name = self.add_category_name.clone();
-        self.category_list.list.sort_unstable_by_key(|c| c.name.clone());
+        self.category_list
+            .list
+            .sort_unstable_by_key(|c| c.name.clone());
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
