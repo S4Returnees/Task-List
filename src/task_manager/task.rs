@@ -1,6 +1,6 @@
 use chrono::NaiveDate;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Priority {
     None,
     Optional,
@@ -9,25 +9,7 @@ pub enum Priority {
     High,
     Critical,
 }
-
-impl Priority {
-    pub const ALL: [Priority; 6] = [
-        Priority::None,
-        Priority::Optional,
-        Priority::Low,
-        Priority::Medium,
-        Priority::High,
-        Priority::Critical,
-    ];
-}
-
-impl std::fmt::Display for Priority {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Status {
     Pending,
     InProgress,
