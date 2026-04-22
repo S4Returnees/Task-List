@@ -227,6 +227,10 @@ impl TaskPlanner {
             Status::Done => Status::Pending,
         };
         task.status = next_status;
+        if task.status == Status::Done {
+            let task_clone = task.clone();
+            self.task_list.handle_recurring_task(&task_clone);
+        }
     }
 
     fn add_category_popup_handler(&mut self) {
