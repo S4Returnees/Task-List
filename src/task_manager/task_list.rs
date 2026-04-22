@@ -1,6 +1,6 @@
 use crate::task_manager::task::*;
-use chrono::{NaiveDate, Duration};
-use chrono::{Datelike};
+use chrono::Datelike;
+use chrono::{Duration, NaiveDate};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SortBy {
@@ -40,8 +40,7 @@ fn last_day_of_month(year: i32, month: u32) -> u32 {
     let next_month = if month == 12 { 1 } else { month + 1 };
     let next_year = if month == 12 { year + 1 } else { year };
 
-    let first_of_next =
-        NaiveDate::from_ymd_opt(next_year, next_month, 1).unwrap();
+    let first_of_next = NaiveDate::from_ymd_opt(next_year, next_month, 1).unwrap();
 
     let last_day = first_of_next - Duration::days(1);
     last_day.day()
@@ -101,7 +100,7 @@ impl TaskList {
             Recurrence::None => return,
         };
 
-        let mut new_task = Task {
+        let new_task = Task {
             id: 0,
             name: task.name.clone(),
             description: task.description.clone(),
