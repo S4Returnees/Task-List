@@ -23,6 +23,8 @@ pub fn render_view(state: &TaskPlanner) -> Element<'_, Message> {
         stack![main_content, opaque(add_task_popup::view(state))].into()
     } else if state.show_task_detail_popup.is_some() {
         stack![main_content, opaque(task_detail_popup::view(state))].into()
+    } else if state.show_add_category_popup {
+        stack![main_content, opaque(add_category_popup::view(state))].into()
     } else {
         main_content.into()
     }

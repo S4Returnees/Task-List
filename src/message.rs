@@ -15,7 +15,6 @@ pub enum Message {
     PriorityItemSelected(Priority),
     TaskDueDateChanged(String),
     TaskDescriptionChanged(text_editor::Action),
-
     AddTaskButtonPressed,
 
     SortBySelectedItem(String),
@@ -23,6 +22,11 @@ pub enum Message {
     SelectTask(usize),
     CloseTaskDetailPopup,
     StatusButton(usize),
+    
+    OpenAddCategoryPopup,
+    CloseAddCategoryPopup,
+    CategoryNameChanged(String),
+    AddCategoryButtonPressed,
 
     NextMonth,
     PrevMonth,

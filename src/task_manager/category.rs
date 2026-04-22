@@ -4,8 +4,8 @@ pub struct Category {
 }
 
 impl Category {
-    pub fn new(id: usize, name: String) -> Self {
-        Category { id, name }
+    pub fn new(name: String) -> Self {
+        Category { id: 0, name }
     }
 
     pub fn update_name(&mut self, name: String) {

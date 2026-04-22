@@ -1,4 +1,5 @@
 use crate::message::Message;
+use crate::task_manager::category::Category;
 use crate::task_manager::category_list::CategoryList;
 use crate::task_manager::task::{Priority, Status, Task};
 use crate::task_manager::task_list::TaskList;
@@ -32,6 +33,8 @@ pub struct TaskPlanner {
     pub priority_selected_item: Option<Priority>,
     pub add_task_due_date: String,
     pub add_task_description: text_editor::Content,
+    pub show_add_category_popup: bool,
+    pub add_category_name: String,
     pub sort_by_combo_state: combo_box::State<String>,
     pub sort_by_selected_item: Option<String>,
     pub current_year: i32,
@@ -60,6 +63,8 @@ impl Default for TaskPlanner {
             priority_selected_item: Some(Priority::None),
             add_task_due_date: String::new(),
             add_task_description: text_editor::Content::new(),
+            show_add_category_popup: false,
+            add_category_name: String::new(),
             sort_by_combo_state: combo_box::State::new(vec![
                 "Name".to_string(),
                 "Priority".to_string(),
@@ -77,11 +82,13 @@ impl TaskPlanner {
     pub fn update(&mut self, message: Message) {
         match message {
             Message::TabSelected(tab) => self.active_tab = tab,
+
             Message::OpenAddTaskPopup(category) => {
                 self.show_add_task_popup = true;
                 self.add_task_category = category;
             }
             Message::CloseAddTaskPopup => self.close_add_task_popup(),
+
             Message::TaskNameChanged(new_name) => self.add_task_name = new_name,
             Message::TaskStatusChanged(status) => self.task_status = Some(status),
             Message::CategoryItemSelected(category) => self.category_selected_item = Some(category),
@@ -91,13 +98,25 @@ impl TaskPlanner {
                 self.add_task_description.perform(description)
             }
             Message::AddTaskButtonPressed => self.add_task_handler(),
+
             Message::SortBySelectedItem(sort_by) => {
                 self.sort_by_selected_item = Some(sort_by);
                 todo!()
             }
+
             Message::SelectTask(id) => self.select_task_detail_popup_handler(id),
             Message::CloseTaskDetailPopup => self.close_task_detail_popup_handler(),
+
             Message::StatusButton(id) => self.status_button_handler(id),
+
+            Message::OpenAddCategoryPopup => self.show_add_category_popup = true,
+            Message::CloseAddCategoryPopup => {
+                self.add_category_name.clear();
+                self.show_add_category_popup = false;
+            }
+            Message::CategoryNameChanged(new_name) => self.add_category_name = new_name,
+            Message::AddCategoryButtonPressed => self.add_category_popup_handler(),
+
             Message::PrevMonth => {
                 if self.current_month == 1 {
                     self.current_month = 12;
@@ -198,6 +217,13 @@ impl TaskPlanner {
             Status::Done => Status::Pending,
         };
         task.status = next_status;
+    }
+
+    fn add_category_popup_handler(&mut self) {
+        let new_category = Category::new(self.add_category_name.clone());
+        self.category_list.add(new_category);
+        self.add_category_name.clear();
+        self.show_add_category_popup = false;
     }
 
     pub fn view(&self) -> Element<'_, Message> {

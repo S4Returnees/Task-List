@@ -1,7 +1,6 @@
 use crate::TaskPlanner;
 use crate::app::Tab;
 use crate::message::Message;
-use std::os::linux::raw::stat;
 
 use crate::task_manager::category::Category;
 use iced::widget::{Column, button, column, container, rule, scrollable, text};
@@ -64,6 +63,7 @@ fn add_category_button<'a>() -> Element<'a, Message> {
                 .align_x(alignment::Horizontal::Center)
                 .align_y(alignment::Vertical::Center),
         )
+        .on_press(Message::OpenAddCategoryPopup)
         .width(Length::Fixed(30.0))
         .height(Length::Fixed(30.0))
         .style(|theme, status| {
