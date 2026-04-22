@@ -239,9 +239,6 @@ impl TaskPlanner {
     }
 
     fn delete_category_handler(&mut self, id: usize) {
-        if id == 0 {
-            return;
-        }
         self.task_list
             .list
             .iter_mut()
@@ -252,12 +249,10 @@ impl TaskPlanner {
     }
 
     fn rename_category_popup_handler(&mut self, id: usize) {
-        if id == 0 {
-            return;
-        }
         self.add_category_name = self.category_list.get_name(id);
         self.popup = Popup::RenameCategory(id);
     }
+
     fn close_rename_category_popup_handler(&mut self, id: usize) {
         if self.add_category_name.is_empty() {
             return;

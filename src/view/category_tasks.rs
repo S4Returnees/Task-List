@@ -21,21 +21,22 @@ fn tab_title(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
         category_name = String::from("Uncategorized");
     }
 
+    let mut row = row![
+        text(category_name)
+            .size(25)
+            .width(Length::Fill)
+            .align_x(alignment::Horizontal::Left),
+        Space::new().width(Length::Fill),
+        sort_by_combo_box(state),
+    ]
+    .spacing(10);
+
+    if id != 0 {
+        row = row.push(column!(rename_button(id), delete_button(id)).spacing(15))
+    }
+
     column![
-        container(
-            row![
-                text(category_name)
-                    .size(25)
-                    .width(Length::Fill)
-                    .align_x(alignment::Horizontal::Left),
-                Space::new().width(Length::Fill),
-                sort_by_combo_box(state),
-                column!(rename_button(id), delete_button(id)).spacing(15)
-            ]
-            .spacing(10)
-        )
-        .width(Length::Fill)
-        .padding(20),
+        container(row).width(Length::Fill).padding(20),
         rule::horizontal(1)
     ]
     .width(Length::Fill)
