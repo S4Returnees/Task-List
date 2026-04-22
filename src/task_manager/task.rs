@@ -1,6 +1,13 @@
 use chrono::NaiveDate;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Recurrence {
+    None,
+    Daily,
+    Weekly,
+    Monthly,
+}
+
 pub enum Priority {
     None,
     Optional,
@@ -57,6 +64,7 @@ pub struct Task {
     pub priority: Priority,
     pub status: Status,
     pub due_date: Option<NaiveDate>,
+    pub recurrence: Recurrence,
 }
 
 impl Task {
@@ -75,6 +83,7 @@ impl Task {
             priority,
             status: Status::Pending,
             due_date,
+            recurrence: Recurrence::None,
         }
     }
 
