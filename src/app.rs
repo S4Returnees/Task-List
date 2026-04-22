@@ -1,4 +1,5 @@
 use crate::message::Message;
+use crate::task_manager::category_list::CategoryList;
 use crate::task_manager::task::{Priority, Status, Task};
 use crate::task_manager::task_list::TaskList;
 use crate::view::view::render_view;
@@ -17,6 +18,7 @@ pub enum Tab {
 
 pub struct TaskPlanner {
     pub task_list: TaskList,
+    pub category_list: CategoryList,
     pub active_tab: Tab,
     pub show_add_task_popup: bool,
     pub show_task_detail_popup: Option<usize>,
@@ -38,8 +40,12 @@ pub struct TaskPlanner {
 
 impl Default for TaskPlanner {
     fn default() -> Self {
+        let task_list = TaskList::new(); // Todo load
+        let category_list = CategoryList::new(); // Todo load
+        let category_combo_state = combo_box::State::new(category_list.get_names_list().to_vec());
         Self {
-            task_list: TaskList::new(),
+            task_list,
+            category_list,
             active_tab: Tab::AllTasks,
             show_add_task_popup: false,
             show_task_detail_popup: None,
@@ -47,8 +53,8 @@ impl Default for TaskPlanner {
             status_combo_state: combo_box::State::new(Status::ALL.to_vec()),
             task_status: None,
             add_task_category: None,
-            category_combo_state: combo_box::State::new(vec!["None".to_string()]),
-            category_selected_item: Some("None".to_string()),
+            category_combo_state,
+            category_selected_item: None,
             priority_combo_state: combo_box::State::new(Priority::ALL.to_vec()),
             priority_selected_item: Some(Priority::None),
             add_task_due_date: String::new(),
@@ -86,7 +92,7 @@ impl TaskPlanner {
             Message::AddTaskButtonPressed => self.add_task_handler(),
             Message::SortBySelectedItem(sort_by) => {
                 self.sort_by_selected_item = Some(sort_by);
-                //sort
+                todo!()
             }
             Message::SelectTask(id) => self.select_task_detail_popup_handler(id),
             Message::CloseTaskDetailPopup => self.close_task_detail_popup_handler(),
@@ -126,7 +132,12 @@ impl TaskPlanner {
         let new_task = Task::new(
             self.add_task_name.clone(),
             self.add_task_description.text(),
-            None, //category id
+            self.category_list.get_id(
+                self.category_selected_item
+                    .clone()
+                    .unwrap_or("None".to_string())
+                    .as_str(),
+            ),
             self.priority_selected_item.unwrap(),
             NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok(),
         );
@@ -137,7 +148,7 @@ impl TaskPlanner {
         let task = self.task_list.list.iter().find(|t| t.id == id).unwrap();
         self.add_task_name = task.name.clone();
         self.task_status = Some(task.status.clone());
-        self.category_selected_item = Some("None".to_string()); //self.category_selected_item = task.category_id
+        self.category_selected_item = Some(self.category_list.get_name(task.category_id));
         self.priority_selected_item = Some(task.priority);
         self.add_task_due_date = task.get_due_date();
         self.add_task_description = text_editor::Content::with_text(task.description.as_str());
@@ -158,7 +169,12 @@ impl TaskPlanner {
 
         task.name = self.add_task_name.clone();
         task.status = self.task_status.unwrap();
-        //task.category_id = self.category_selected_item
+        task.category_id = self.category_list.get_id(
+            self.category_selected_item
+                .clone()
+                .unwrap_or("None".to_string())
+                .as_str(),
+        );
         task.priority = self.priority_selected_item.unwrap();
         task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
         task.description = self.add_task_description.text();
