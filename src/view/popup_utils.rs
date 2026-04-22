@@ -24,7 +24,7 @@ pub fn category_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
         )
         .width(Length::Fill),
     ]
-    .into()
+        .into()
 }
 
 pub fn priority_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
@@ -38,5 +38,5 @@ pub fn priority_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
         )
         .width(Length::Fill),
     ]
-    .into()
+        .into()
 }
