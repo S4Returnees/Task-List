@@ -1,7 +1,8 @@
 use crate::task_manager::task::*;
+use chrono::NaiveDate;
 
 pub struct TaskList {
-    list: Vec<Task>,
+    pub list: Vec<Task>,
 }
 
 impl TaskList {
