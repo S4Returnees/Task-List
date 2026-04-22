@@ -50,7 +50,7 @@ impl Default for TaskPlanner {
     fn default() -> Self {
         let task_list = TaskList::new(); // Todo load
         let mut category_list = CategoryList::new(); // Todo load
-        category_list.list.sort_unstable_by_key(|c| c.id);
+        category_list.list.sort_unstable_by_key(|c| c.name.clone());
         let category_combo_state = combo_box::State::new(category_list.get_names_list().to_vec());
         Self {
             task_list,
@@ -232,6 +232,7 @@ impl TaskPlanner {
     fn add_category_popup_handler(&mut self) {
         let new_category = Category::new(self.add_category_name.clone());
         self.category_list.add(new_category);
+        self.category_list.list.sort_unstable_by_key(|c| c.name.clone());
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
@@ -265,6 +266,7 @@ impl TaskPlanner {
             .find(|c| c.id == id)
             .unwrap();
         category.name = self.add_category_name.clone();
+        self.category_list.list.sort_unstable_by_key(|c| c.name.clone());
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
