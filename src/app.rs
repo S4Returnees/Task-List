@@ -83,9 +83,9 @@ impl TaskPlanner {
         match message {
             Message::TabSelected(tab) => self.active_tab = tab,
 
-            Message::OpenAddTaskPopup(category) => {
+            Message::OpenAddTaskPopup(category_id) => {
                 self.show_add_task_popup = true;
-                self.add_task_category = category;
+                self.category_selected_item = Some(self.category_list.get_name(category_id));
             }
             Message::CloseAddTaskPopup => self.close_add_task_popup(),
 
@@ -223,6 +223,7 @@ impl TaskPlanner {
         let new_category = Category::new(self.add_category_name.clone());
         self.category_list.add(new_category);
         self.add_category_name.clear();
+        self.category_combo_state = combo_box::State::new(self.category_list.get_names_list().to_vec());
         self.show_add_category_popup = false;
     }
 

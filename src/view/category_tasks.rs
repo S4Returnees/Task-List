@@ -1,36 +1,46 @@
 use crate::TaskPlanner;
 use crate::message::Message;
-use crate::task_manager::task::{Priority, Status, Task};
 
+use crate::task_manager::task::{Priority, Status, Task};
 use iced::border::Radius;
 use iced::widget::{Space, button, column, combo_box, container, row, rule, scrollable, svg, text};
 use iced::{Border, Color, Element, Length, alignment};
 
-pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
-    column![tab_title(state), show_task(state), add_task_button(),]
-        .spacing(10)
-        .into()
+pub fn view(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
+    column![
+        tab_title(state, id),
+        show_task(state, id),
+        add_task_button(id)
+    ]
+    .spacing(10)
+    .into()
 }
 
-fn tab_title(state: &TaskPlanner) -> Element<'_, Message> {
+fn tab_title(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
+    let mut category_name = state.category_list.get_name(id);
+    if category_name == "None".to_string() {
+        category_name = String::from("Uncategorized");
+    }
+
     column![
         container(row![
-            text("All Tasks")
+            text(category_name)
                 .size(25)
                 .width(Length::Fill)
                 .align_x(alignment::Horizontal::Left),
             Space::new().width(Length::Fill),
+            // todo rem and edit button
             sort_by_combo_box(state)
         ])
         .width(Length::Fill)
         .padding(20),
-        rule::horizontal(1),
+        rule::horizontal(1)
     ]
     .width(Length::Fill)
     .into()
 }
 
-pub fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
+fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
     column![
         text("Sort by")
             .size(14)
@@ -47,7 +57,7 @@ pub fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
     .into()
 }
 
-fn add_task_button<'a>() -> Element<'a, Message> {
+fn add_task_button<'a>(id: usize) -> Element<'a, Message> {
     container(
         button(
             container(text("+").size(20))
@@ -56,7 +66,7 @@ fn add_task_button<'a>() -> Element<'a, Message> {
                 .align_x(alignment::Horizontal::Center)
                 .align_y(alignment::Vertical::Center),
         )
-        .on_press(Message::OpenAddTaskPopup(0))
+        .on_press(Message::OpenAddTaskPopup(id))
         .width(Length::Fixed(40.0))
         .height(Length::Fixed(40.0))
         .style(|theme, status| {
@@ -71,10 +81,10 @@ fn add_task_button<'a>() -> Element<'a, Message> {
     .into()
 }
 
-fn show_task(state: &TaskPlanner) -> Element<'_, Message> {
+fn show_task(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
     let mut col = column![].spacing(10);
 
-    for task in &state.task_list.list {
+    for task in state.task_list.list.iter().filter(|t| t.category_id == id) {
         col = col.push(task_button(task));
     }
 
@@ -165,4 +175,3 @@ fn task_due_date_indicator(due_date: String) -> Element<'static, Message> {
     }
     text(due_date).align_x(alignment::Horizontal::Right).into()
 }
-

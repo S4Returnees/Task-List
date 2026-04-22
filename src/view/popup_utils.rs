@@ -23,7 +23,6 @@ pub fn category_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
             Message::CategoryItemSelected
         )
         .width(Length::Fill),
-        //state.category_combo_state.push(new_category); to add a category
     ]
     .into()
 }

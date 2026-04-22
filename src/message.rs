@@ -6,7 +6,7 @@ use iced::widget::text_editor;
 pub enum Message {
     TabSelected(Tab),
 
-    OpenAddTaskPopup(Option<String>),
+    OpenAddTaskPopup(usize),
     CloseAddTaskPopup,
 
     TaskNameChanged(String),
