@@ -208,6 +208,7 @@ impl TaskPlanner {
         task.priority = self.priority_selected_item.unwrap();
         task.due_date = NaiveDate::parse_from_str(&self.add_task_due_date, "%Y-%m-%d").ok();
         task.description = self.add_task_description.text();
+        self.apply_current_sort();
         self.close_add_task_popup();
         self.popup = Popup::None;
     }
