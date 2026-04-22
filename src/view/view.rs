@@ -23,9 +23,11 @@ pub fn render_view(state: &TaskPlanner) -> Element<'_, Message> {
         Popup::None => main_content.into(),
         Popup::AddTask => stack![main_content, opaque(add_task_popup::view(state))].into(),
         Popup::TaskDetails(id) => {
-            stack![main_content, opaque(task_detail_popup::view(state))].into()
+            stack![main_content, opaque(task_detail_popup::view(state, id))].into()
         }
         Popup::AddCategory => stack![main_content, opaque(add_category_popup::view(state))].into(),
-        Popup::RenameCategory(id) => todo!(),
+        Popup::RenameCategory(id) => {
+            stack![main_content, opaque(rename_category_popup::view(state, id))].into()
+        }
     }
 }

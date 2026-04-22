@@ -1,4 +1,4 @@
-use crate::app::{Popup, TaskPlanner};
+use crate::app::TaskPlanner;
 use crate::message::Message;
 use crate::view::popup_utils::*;
 
@@ -7,17 +7,12 @@ use iced::widget::{
 };
 use iced::{Element, Length};
 
-pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
-    let task_id = match state.popup {
-        Popup::TaskDetails(id) => id,
-        _ => unreachable!(),
-    };
-
+pub fn view(state: &'_ TaskPlanner, id: usize) -> Element<'_, Message> {
     let task = state
         .task_list
         .list
         .iter()
-        .find(|t| t.id == task_id)
+        .find(|t| t.id == id)
         .unwrap();
 
     let popup_box = container(

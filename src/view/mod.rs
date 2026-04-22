@@ -9,3 +9,4 @@ mod popup_utils;
 mod add_category_popup;
 mod category_tasks;
 mod tasks_view_utils;
+mod rename_category_popup;
