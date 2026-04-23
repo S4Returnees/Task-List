@@ -7,3 +7,4 @@ edition = "2024"
 chrono = "0.4.44"
 iced = { version = "0.14", features = ["svg"] }
 num-traits = "0.2.19"
+rfd = "0.17.2"

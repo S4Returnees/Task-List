@@ -8,6 +8,8 @@ use crate::view::view::render_view;
 use chrono::{Datelike, Local, NaiveDate};
 use iced::Element;
 use iced::widget::{combo_box, text_editor};
+use rfd::AsyncFileDialog;
+use std::path::PathBuf;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Tab {
@@ -80,7 +82,9 @@ impl Default for TaskPlanner {
 }
 
 impl TaskPlanner {
-    pub fn update(&mut self, message: Message) {
+    pub fn update(&mut self, message: Message) -> iced::Task<Message> {
+        let mut task_to_run = iced::Task::none();
+
         match message {
             Message::TabSelected(tab) => self.active_tab = tab,
 
@@ -144,7 +148,14 @@ impl TaskPlanner {
                     self.current_month += 1;
                 }
             }
+            Message::Save => self.save(),
+            Message::Export => task_to_run = self.export_file_dialog(),
+            Message::Import => task_to_run = self.import_file_dialog(),
+            Message::Reset => self.reset(),
+
+            Message::PathSelected(path) => self.path_selected_handler(path.unwrap()),
         }
+        task_to_run
     }
 
     fn close_add_task_popup(&mut self) {
@@ -176,6 +187,7 @@ impl TaskPlanner {
         self.task_list.add(new_task);
 
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
+        self.save();
 
         self.close_add_task_popup()
     }
@@ -223,8 +235,8 @@ impl TaskPlanner {
 
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
 
+        self.save();
         self.close_add_task_popup();
-        self.popup = Popup::None;
     }
 
     fn verify_due_date(&mut self) -> bool {
@@ -258,6 +270,8 @@ impl TaskPlanner {
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
+
+        self.save();
         self.popup = Popup::None;
     }
 
@@ -268,11 +282,15 @@ impl TaskPlanner {
             .filter(|t| t.category_id == id)
             .for_each(|t| t.category_id = 0);
         self.category_list.remove(id);
+
+        self.save();
         self.active_tab = Tab::Category(0)
     }
 
     fn rename_category_popup_handler(&mut self, id: usize) {
         self.add_category_name = self.category_list.get_name(id);
+
+        self.save();
         self.popup = Popup::RenameCategory(id);
     }
 
@@ -294,7 +312,60 @@ impl TaskPlanner {
         self.add_category_name.clear();
         self.category_combo_state =
             combo_box::State::new(self.category_list.get_names_list().to_vec());
+
+        self.save();
         self.popup = Popup::None;
+    }
+
+    fn save(&self) {
+        todo!()
+    }
+
+    fn export_file_dialog(&self) -> iced::Task<Message> {
+        iced::Task::perform(
+            async {
+                let handle = AsyncFileDialog::new()
+                    .set_title("Select a folder")
+                    .pick_folder()
+                    .await;
+                handle.map(|h| h.path().to_path_buf())
+            },
+            Message::PathSelected,
+        )
+    }
+
+    fn import_file_dialog(&self) -> iced::Task<Message> {
+        iced::Task::perform(
+            async {
+                let handle = AsyncFileDialog::new()
+                    .set_title("Select a file")
+                    .add_filter("JSON File", &["json"])
+                    .pick_file()
+                    .await;
+                handle.map(|h| h.path().to_path_buf())
+            },
+            Message::PathSelected,
+        )
+    }
+
+    fn reset(&mut self) {
+        todo!()
+    }
+
+    fn path_selected_handler(&self, path: PathBuf) {
+        if path.is_dir() {
+            self.export(path)
+        } else {
+            self.import(path)
+        }
+    }
+
+    fn export(&self, path: PathBuf) {
+        todo!()
+    }
+
+    fn import(&self, path: PathBuf) {
+        todo!()
     }
 
     pub fn view(&self) -> Element<'_, Message> {

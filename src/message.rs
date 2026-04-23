@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use crate::app::Tab;
 use crate::task_manager::task::{Priority, Recurrence, Status};
 use crate::task_manager::task_list::SortBy;
@@ -36,4 +37,11 @@ pub enum Message {
 
     NextMonth,
     PrevMonth,
+
+    Save,
+    Export,
+    Import,
+    Reset,
+
+    PathSelected(Option<PathBuf>),
 }
