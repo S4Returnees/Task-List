@@ -1,6 +1,7 @@
 use crate::message::Message;
 use crate::task_manager::category::Category;
 use crate::task_manager::category_list::CategoryList;
+use crate::task_manager::saving::*;
 use crate::task_manager::task::{Priority, Recurrence, Status, Task};
 use crate::task_manager::task_list::{SortBy, TaskList};
 use crate::view::view::render_view;
@@ -48,14 +49,23 @@ pub struct TaskPlanner {
     pub sort_by_selected_item: Option<SortBy>,
     pub current_year: i32,
     pub current_month: u32,
+    pub save_path: PathBuf,
 }
 
 impl Default for TaskPlanner {
     fn default() -> Self {
-        let task_list = TaskList::new(); // Todo load
-        let mut category_list = CategoryList::new(); // Todo load
+        let save_path = PathBuf::from("save.json");
+        let save_data = load(&save_path);
+
+        let mut task_list = TaskList::new();
+        task_list.list = save_data.tasks;
+        task_list.sort_by(SortBy::Id);
+
+        let mut category_list = CategoryList::new();
+        category_list.list = save_data.category;
         category_list.list.sort_unstable_by_key(|c| c.name.clone());
         let category_combo_state = combo_box::State::new(category_list.get_names_list().to_vec());
+
         Self {
             task_list,
             category_list,
@@ -77,6 +87,7 @@ impl Default for TaskPlanner {
             sort_by_selected_item: Some(SortBy::Id),
             current_year: Local::now().year(),
             current_month: Local::now().month(),
+            save_path,
         }
     }
 }
@@ -233,6 +244,9 @@ impl TaskPlanner {
         task.recurrence = self.recurrence_selected_item.unwrap();
         task.description = self.add_task_description.text();
 
+        if task.status == Status::Done {
+            self.task_list.handle_recurring_task(task_id);
+        }
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
 
         self.save();
@@ -259,6 +273,7 @@ impl TaskPlanner {
             self.task_list.handle_recurring_task(id);
         }
         self.task_list.sort_by(self.sort_by_selected_item.unwrap());
+        self.save();
     }
 
     fn add_category_popup_handler(&mut self) {
@@ -318,7 +333,11 @@ impl TaskPlanner {
     }
 
     fn save(&self) {
-        todo!()
+        let save_data = SaveData {
+            tasks: self.task_list.list.clone(),
+            category: self.category_list.list.clone(),
+        };
+        save(&save_data, &self.save_path);
     }
 
     fn export_file_dialog(&self) -> iced::Task<Message> {
@@ -349,7 +368,10 @@ impl TaskPlanner {
     }
 
     fn reset(&mut self) {
-        todo!()
+        self.task_list = TaskList::new();
+        self.category_list = CategoryList::new();
+        self.save();
+        self.sort_by_selected_item = Some(SortBy::Id);
     }
 
     fn path_selected_handler(&self, path: PathBuf) {
