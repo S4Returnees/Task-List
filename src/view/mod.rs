@@ -1,12 +1,12 @@
+mod add_category_popup;
 mod add_task_popup;
 pub mod all_tasks;
 pub mod calendar;
+mod category_tasks;
+mod popup_utils;
+mod rename_category_popup;
 pub mod settings;
 pub mod sidebar;
-pub mod view;
 mod task_detail_popup;
-mod popup_utils;
-mod add_category_popup;
-mod category_tasks;
 mod tasks_view_utils;
-mod rename_category_popup;
+pub mod view;
