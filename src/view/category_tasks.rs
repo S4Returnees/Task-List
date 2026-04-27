@@ -1,7 +1,7 @@
 use crate::TaskPlanner;
 use crate::message::Message;
-
 use crate::view::tasks_view_utils::{add_task_button, show_task, sort_by_combo_box};
+
 use iced::widget::{Space, button, column, container, row, rule, svg, text};
 use iced::{Element, Length, alignment};
 

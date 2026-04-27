@@ -3,6 +3,7 @@ use crate::task_manager::task::{Priority, Recurrence, Status};
 use crate::task_manager::task_list::SortBy;
 
 use iced::widget::text_editor;
+use std::path::PathBuf;
 
 #[derive(Debug, Clone)]
 pub enum Message {
@@ -36,4 +37,11 @@ pub enum Message {
 
     NextMonth,
     PrevMonth,
+
+    Save,
+    Export,
+    Import,
+    Reset,
+
+    PathSelected(Option<PathBuf>),
 }

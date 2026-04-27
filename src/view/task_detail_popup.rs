@@ -8,12 +8,7 @@ use iced::widget::{
 use iced::{Element, Length};
 
 pub fn view(state: &'_ TaskPlanner, id: usize) -> Element<'_, Message> {
-    let task = state
-        .task_list
-        .list
-        .iter()
-        .find(|t| t.id == id)
-        .unwrap();
+    let task = state.task_list.list.iter().find(|t| t.id == id).unwrap();
 
     let popup_box = container(
         column![

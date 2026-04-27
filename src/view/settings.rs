@@ -10,14 +10,21 @@ pub fn view(_state: &TaskPlanner) -> Element<'_, Message> {
             .size(50)
             .width(Length::Fill)
             .align_x(iced::alignment::Horizontal::Center),
-        
         Space::new().height(Length::Fixed(20.0)),
-        
         container(
             column![
-                button("Export").width(Length::Fixed(200.0)),
-                button("Import").width(Length::Fixed(200.0)),
-                button("Reset").width(Length::Fixed(200.0))
+                button("Save")
+                    .on_press(Message::Save)
+                    .width(Length::Fixed(200.0)),
+                button("Export")
+                    .on_press(Message::Export)
+                    .width(Length::Fixed(200.0)),
+                button("Import")
+                    .on_press(Message::Import)
+                    .width(Length::Fixed(200.0)),
+                button("Reset")
+                    .on_press(Message::Reset)
+                    .width(Length::Fixed(200.0))
             ]
             .spacing(20)
         )
