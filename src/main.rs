@@ -15,7 +15,7 @@ pub fn main() -> iced::Result {
         .title(|_state: &TaskPlanner| String::from("Task List"))
         .theme(|_state: &TaskPlanner| Theme::Dark)
         .window(window::Settings {
-            //maximized: true,
+            maximized: true,
             size: Size::new(1280.0, 720.0),
             icon,
             ..Default::default()

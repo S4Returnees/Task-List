@@ -23,20 +23,20 @@ fn tab_title(state: &TaskPlanner, id: usize) -> Element<'_, Message> {
 
     let mut row = row![
         text(category_name)
-            .size(25)
+            .size(50)
             .width(Length::Fill)
             .align_x(alignment::Horizontal::Left),
         Space::new().width(Length::Fill),
         sort_by_combo_box(state),
     ]
-    .spacing(10);
+    .spacing(20);
 
     if id != 0 {
-        row = row.push(column!(rename_button(id), delete_button(id)).spacing(15))
+        row = row.push(column!(rename_button(id), delete_button(id)).spacing(30))
     }
 
     column![
-        container(row).width(Length::Fill).padding(20),
+        container(row).width(Length::Fill).padding(40),
         rule::horizontal(1)
     ]
     .width(Length::Fill)

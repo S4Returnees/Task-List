@@ -48,7 +48,7 @@ fn header() -> Element<'static, Message> {
 
 fn status_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
     column![
-        text("Status").size(14),
+        text("Status").size(20),
         combo_box(
             &state.status_combo_state,
             "",

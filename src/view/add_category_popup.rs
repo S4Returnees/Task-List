@@ -11,15 +11,14 @@ pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
             header(),
             text_input("Category Name", &state.add_category_name)
                 .on_input(Message::CategoryNameChanged),
-            button("Add Category")
+            button(text("Add Category").width(Length::Fill).center())
                 .on_press(Message::AddCategoryButtonPressed)
                 .width(Length::Fill)
         ]
         .spacing(25)
         .padding(20),
     )
-    .width(Length::Fixed(400.0))
-    .height(Length::Fixed(400.0))
+    .width(400)
     .style(|_theme| dark_overlay(0.8));
 
     container(popup_box)
@@ -33,7 +32,7 @@ pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
 fn header() -> Element<'static, Message> {
     container(
         row![
-            text("New Category").size(25),
+            text("New Category").size(30),
             Space::new().width(Length::Fill),
             button("X").on_press(Message::CloseAddCategoryPopup),
         ]

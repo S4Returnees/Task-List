@@ -18,9 +18,9 @@ pub fn view(state: &'_ TaskPlanner) -> Element<'_, Message> {
             text_editor(&state.add_task_description)
                 .on_action(Message::TaskDescriptionChanged)
                 .height(Length::Fill),
-            button("Add Task")
+            button(text("Add Task").size(20).width(Length::Fill).center())
                 .on_press(Message::AddTaskButtonPressed)
-                .width(Length::Fill),
+                .width(Length::Fill).height(40),
         ]
         .spacing(25)
         .padding(20),
@@ -41,7 +41,7 @@ fn header() -> Element<'static, Message> {
     container(
         column![
             row![
-                text("New Task").size(25),
+                text("New Task").size(30),
                 Space::new().width(Length::Fill),
                 button("X").on_press(Message::CloseAddTaskPopup),
             ],
