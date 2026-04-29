@@ -9,7 +9,7 @@ use iced::{Border, Color, Element, Length, alignment};
 pub fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
     iced::widget::column![
         text("Sort by")
-            .size(14)
+            .size(20)
             .width(Length::Fill)
             .align_x(alignment::Horizontal::Center),
         combo_box(
@@ -19,7 +19,7 @@ pub fn sort_by_combo_box(state: &TaskPlanner) -> Element<'_, Message> {
             Message::SortBySelectedItem
         ),
     ]
-    .width(Length::Fixed(100.0))
+    .width(Length::Fixed(150.0))
     .into()
 }
 

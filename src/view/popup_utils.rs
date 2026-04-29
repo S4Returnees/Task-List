@@ -15,7 +15,7 @@ pub fn dark_overlay(alpha: f32) -> container::Style {
 
 pub fn category_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
     column![
-        text("Category").size(14),
+        text("Category").size(20),
         combo_box(
             &state.category_combo_state,
             "",
@@ -29,7 +29,7 @@ pub fn category_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
 
 pub fn priority_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
     column![
-        text("Priority").size(14),
+        text("Priority").size(20),
         combo_box(
             &state.priority_combo_state,
             "",
@@ -43,7 +43,7 @@ pub fn priority_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
 
 pub fn recurring_combo_box(state: &'_ TaskPlanner) -> Element<'_, Message> {
     column!(
-        text("Recurrence").size(14),
+        text("Recurrence").size(20),
         combo_box(
             &state.recurrence_combo_state,
             "",

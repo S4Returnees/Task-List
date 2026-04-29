@@ -8,27 +8,30 @@ use iced::{Element, Length, alignment};
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     column![
-        button("All Tasks")
+        button(text("All Tasks").size(20).center())
             .on_press(Message::TabSelected(Tab::AllTasks))
-            .width(Length::Fill),
-        button("Calendar")
+            .width(Length::Fill)
+            .height(40),
+        button(text("Calendar").size(20).center())
             .on_press(Message::TabSelected(Tab::Calendar))
-            .width(Length::Fill),
+            .width(Length::Fill)
+            .height(40),
         rule::horizontal(5),
         text("Categories")
-            .size(15)
+            .size(20)
             .width(Length::Fill)
-            .align_x(iced::alignment::Horizontal::Center),
+            .align_x(alignment::Horizontal::Center),
         categories(state),
         add_category_button(),
         rule::horizontal(5),
-        button("Settings")
+        button(text("Settings").size(20).center())
             .on_press(Message::TabSelected(Tab::Settings))
-            .width(Length::Fill),
+            .width(Length::Fill)
+            .height(40),
     ]
-    .padding(10)
-    .spacing(10)
-    .width(Length::Fixed(200.0))
+    .padding(20)
+    .spacing(15)
+    .width(300)
     .height(Length::Fill)
     .into()
 }
@@ -36,9 +39,10 @@ pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
 fn categories(state: &TaskPlanner) -> Element<'_, Message> {
     let mut col: Column<Message> = column![].spacing(10);
 
-    let uncategorized = button("Uncategorized")
+    let uncategorized = button(text("Uncategorized").size(20).center())
         .on_press(Message::TabSelected(Tab::Category(0)))
-        .width(Length::Fill);
+        .width(Length::Fill)
+        .height(40);
 
     col = col.push(uncategorized);
     for category in &state.category_list.list {
@@ -48,27 +52,28 @@ fn categories(state: &TaskPlanner) -> Element<'_, Message> {
 }
 
 fn category_button(category: &Category) -> Element<'static, Message> {
-    button(text(category.name.clone()))
+    button(text(category.name.clone()).size(20).center())
         .on_press(Message::TabSelected(Tab::Category(category.id)))
         .width(Length::Fill)
+        .height(40)
         .into()
 }
 
 fn add_category_button<'a>() -> Element<'a, Message> {
     container(
         button(
-            container(text("+").size(15))
+            container(text("+").size(20))
                 .width(Length::Fill)
                 .height(Length::Fill)
                 .align_x(alignment::Horizontal::Center)
                 .align_y(alignment::Vertical::Center),
         )
         .on_press(Message::OpenAddCategoryPopup)
-        .width(Length::Fixed(30.0))
-        .height(Length::Fixed(30.0))
+        .width(Length::Fixed(40.0))
+        .height(Length::Fixed(40.0))
         .style(|theme, status| {
             let mut style = button::primary(theme, status);
-            style.border.radius = 15.0.into();
+            style.border.radius = 20.0.into();
             style
         }),
     )

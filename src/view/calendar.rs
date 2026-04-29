@@ -9,7 +9,7 @@ use num_traits::FromPrimitive;
 
 pub fn view(state: &TaskPlanner) -> Element<'_, Message> {
     column![title(state), calendar_grid(state)]
-        .spacing(10)
+        .spacing(20)
         .into()
 }
 
@@ -22,13 +22,13 @@ fn title(state: &TaskPlanner) -> Element<'static, Message> {
 
     column![
         text("Calendar")
-            .size(25)
+            .size(50)
             .width(Length::Fill)
             .align_x(alignment::Horizontal::Center),
         row![
             next_prev_button("<"),
             text(date_name)
-                .size(25)
+                .size(50)
                 .width(Length::Fill)
                 .align_x(alignment::Horizontal::Center)
                 .align_y(alignment::Vertical::Center),
@@ -42,7 +42,7 @@ fn title(state: &TaskPlanner) -> Element<'static, Message> {
 fn next_prev_button(next_prev: &'_ str) -> Element<'_, Message> {
     container(
         button(
-            container(text(next_prev).size(15))
+            container(text(next_prev).size(30))
                 .width(Length::Fill)
                 .height(Length::Fill)
                 .align_x(alignment::Horizontal::Center)
@@ -53,11 +53,11 @@ fn next_prev_button(next_prev: &'_ str) -> Element<'_, Message> {
         } else {
             Message::NextMonth
         })
-        .width(Length::Fixed(30.0))
-        .height(Length::Fixed(30.0))
+        .width(Length::Fixed(60.0))
+        .height(Length::Fixed(60.0))
         .style(|theme, status| {
             let mut style = button::primary(theme, status);
-            style.border.radius = 15.0.into();
+            style.border.radius = 30.0.into();
             style
         }),
     )
@@ -81,7 +81,7 @@ fn calendar_grid(state: &TaskPlanner) -> Element<'_, Message> {
 
     for day in days_of_week {
         header_row = header_row.push(
-            container(text(day).size(15))
+            container(text(day).size(30))
                 .width(Length::Fill)
                 .align_x(alignment::Horizontal::Center),
         );
@@ -133,7 +133,7 @@ fn get_row_count(start_offset: u32, days_in_month: u32) -> u32 {
 
 fn day_cell(state: &TaskPlanner, date: NaiveDate) -> Element<'_, Message> {
     let day_number = text(date.day().to_string())
-        .size(15)
+        .size(20)
         .width(Length::Fill)
         .align_x(alignment::Horizontal::Center);
 
@@ -175,12 +175,9 @@ fn day_cell(state: &TaskPlanner, date: NaiveDate) -> Element<'_, Message> {
 }
 
 fn task_button(task: Task) -> Element<'static, Message> {
-    button(
-        text!("{}", &task.name)
-            .size(12)
-            .align_y(alignment::Vertical::Center),
-    )
-    .width(Length::Fill)
-    .height(15)
-    .into()
+    button(text!("{}", &task.name).align_y(alignment::Vertical::Center))
+        .on_press(Message::SelectTask(task.id))
+        .width(Length::Fill)
+        .height(25)
+        .into()
 }
