@@ -9,29 +9,19 @@ Developed as a group project, Task List focuses on performance, reliability, and
 
 ## 💾 Installation
 ### 🪟 On Windows (7, 8, 10, 11):
-* Download the installer ([TODO](TODO))
-* Run the installer (TODO) and follow the instructions
-* Follow the instructions of the installer:
-  * Choose your preferred language
-  * Accept the terms and conditions
-  * Select the installation directory (default: C:\Program Files\TODO)
-  * Choose whether to create a desktop shortcut or not by checking/unchecking the option
-  * Click Install
-* After installation:
-  * Optionally check ”Launch TODO”
-  * Click Finish to close the installer
-
-You can launch the software in two ways:
-* From the desktop (if shortcut was created):  
-  Double-click the TODO icon.
-* From the Start Menu:  
-  Go to Start > TODO > Open
+* Download the application [Task_List.exe](TODO)
+* Run the application
 
 ### 🐧 On Linux:
 * Download the tar file [Task_List.tar.gz](TODO) 
 ```bash
 tar -xvzf TODO.tar.gz
 ```
+* Run the application
+```bash
+./Task_List
+```
+
 ## ❌ Uninstallation
 ### 🪟 On Windows:
 * Open Control Panel > Programs > Uninstall a program
