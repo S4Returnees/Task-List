@@ -16,7 +16,6 @@ pub fn main() -> iced::Result {
         .theme(|_state: &TaskPlanner| Theme::Dark)
         .window(window::Settings {
             maximized: true,
-            size: Size::new(1280.0, 720.0),
             icon,
             ..Default::default()
         })
