@@ -9,13 +9,13 @@ Developed as a group project, Task List focuses on performance, reliability, and
 
 ## 💾 Installation
 ### 🪟 On Windows (7, 8, 10, 11):
-* Download the application [Task_List.exe](TODO)
+* Download the application [Task_List.exe](https://github.com/S4Returnees/Task-List/releases/download/v1.0/Task_List.exe)
 * Run the application
 
 ### 🐧 On Linux:
-* Download the tar file [Task_List.tar.gz](TODO) 
+* Download the tar file [Task_List.tar.gz](https://github.com/S4Returnees/Task-List/releases/download/v1.0/Task_List.tar.gz) 
 ```bash
-tar -xvzf TODO.tar.gz
+tar -xvzf Task_List.tar.gz
 ```
 * Run the application
 ```bash
@@ -24,10 +24,7 @@ tar -xvzf TODO.tar.gz
 
 ## ❌ Uninstallation
 ### 🪟 On Windows:
-* Open Control Panel > Programs > Uninstall a program
-* Select TODO and click Uninstall  
-Or:
-* Use the Uninstall TODO shortcut from the Start Menu
+* Delete the Task_List.exe and save.json files 
 
 ### 🐧 On Linux:
 ```bash
