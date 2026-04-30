@@ -1,7 +1,11 @@
 # Task List
 
 ## 📖 Introduction
-(TODO)
+Task List is a task management application developed in Rust as part of a group project for the S4 semester at EPITA.
+
+The goal of this project is to provide a simple, fast, and accessible tool for organizing, tracking, and managing tasks. It is designed for both personal use and team collaboration.
+
+Developed as a group project, Task List focuses on performance, reliability, and clean code practices, while exploring modern Rust development techniques.
 
 ## 💾 Installation
 ### 🪟 On Windows (7, 8, 10, 11):
@@ -24,16 +28,9 @@ You can launch the software in two ways:
   Go to Start > TODO > Open
 
 ### 🐧 On Linux:
-* Download the tar file (TODO.tar):  
-  [TODO](TODO)
+* Download the tar file [Task_List.tar.gz](TODO) 
 ```bash
 tar -xvzf TODO.tar.gz
-cd TODO
-```
-* Make the main executable runnable:
-```bash
-chmod +x TODO.x86_64
-./ TODO.x86_64
 ```
 ## ❌ Uninstallation
 ### 🪟 On Windows:
@@ -44,16 +41,54 @@ Or:
 
 ### 🐧 On Linux:
 ```bash
-rm -rf ~/ TODO
+rm Task_List
+rm save.json
 ```
 
-## ⌨️ Commands (Optionnal)
-| Action                                          | Key                               |
-|-------------------------------------------------|-----------------------------------|
-| Return / Settings Menu                          | ESC                               |
-
 ## 🛠️ Usage
-TODO
+### 📋 All Task
+The All Tasks tab allows users to create, edit, and manage all their tasks in one place.
+
+Each task includes:
+* a name
+* a status (pending, in progress, done)
+* optional attributes such as category, priority, due date, and description
+
+Tasks can also be set as recurring on a daily, weekly, or monthly basis.
+
+Users can visually sort tasks by:
+* name
+* priority
+* due date
+* status
+
+### 📅 Calendar
+The Calendar tab provides a monthly view of all tasks with a defined due date.
+
+Users can easily navigate between months to track upcoming and past deadlines.
+
+### 🗂️ Categories
+
+The Categories tab allows users to organize tasks by category.
+
+It offers the same functionality as the All Tasks tab, but filtered by category.
+
+Users can:
+
+* create new categories
+* rename existing ones
+* delete categories
+
+⚠️ Deleting a category does not remove the associated tasks.
+
+### ⚙️ Settings
+
+The Settings tab provides data management features.
+
+Users can:
+* save application data
+* export and import data
+* reset the entire application state
 
 ## 📜 License
 Copyright (c) 2026 S4Returnees
