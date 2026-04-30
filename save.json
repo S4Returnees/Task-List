@@ -1,34 +1,4 @@
 {
-  "category": [
-    {
-      "id": 2,
-      "name": "aa"
-    },
-    {
-      "id": 1,
-      "name": "qdwq"
-    }
-  ],
-  "tasks": [
-    {
-      "id": 0,
-      "name": "wfvcewf",
-      "description": "",
-      "category_id": 2,
-      "priority": "High",
-      "status": "Pending",
-      "due_date": "2026-04-20",
-      "recurrence": "None"
-    },
-    {
-      "id": 1,
-      "name": "dqw",
-      "description": "",
-      "category_id": 0,
-      "priority": "None",
-      "status": "Done",
-      "due_date": null,
-      "recurrence": "None"
-    }
-  ]
+  "category": [],
+  "tasks": []
 }

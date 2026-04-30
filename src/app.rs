@@ -164,12 +164,10 @@ impl TaskPlanner {
             Message::Import => task_to_run = self.import_file_dialog(),
             Message::Reset => self.reset(),
 
-            Message::PathSelected(path) => {
-            match path {
+            Message::PathSelected(path) => match path {
                 Some(path) => self.path_selected_handler(path),
                 None => {}
-                }
-            }
+            },
         }
         task_to_run
     }
@@ -389,7 +387,7 @@ impl TaskPlanner {
 
     fn export(&self, path: PathBuf) {
         self.save();
-        let dst = path.join("test_export.json");
+        let dst = path.join("task-list_data.json");
         std::fs::copy(&self.save_path, &dst).expect("Erreur export");
     }
 
@@ -401,6 +399,12 @@ impl TaskPlanner {
         self.category_list.list = data.category;
         self.save();
 
+        self.task_list.sort_by(self.sort_by_selected_item.unwrap());
+        self.category_list
+            .list
+            .sort_unstable_by_key(|c| c.name.clone());
+        self.category_combo_state =
+            combo_box::State::new(self.category_list.get_names_list().to_vec());
     }
 
     pub fn view(&self) -> Element<'_, Message> {
