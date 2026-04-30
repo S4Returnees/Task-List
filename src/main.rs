@@ -7,7 +7,7 @@ mod view;
 
 use app::TaskPlanner;
 use iced::window::icon;
-use iced::{Size, Theme, window};
+use iced::{Theme, window};
 
 pub fn main() -> iced::Result {
     let icon = load_icon();
