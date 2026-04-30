@@ -164,7 +164,12 @@ impl TaskPlanner {
             Message::Import => task_to_run = self.import_file_dialog(),
             Message::Reset => self.reset(),
 
-            Message::PathSelected(path) => self.path_selected_handler(path.unwrap()),
+            Message::PathSelected(path) => {
+            match path {
+                Some(path) => self.path_selected_handler(path),
+                None => {}
+                }
+            }
         }
         task_to_run
     }
@@ -374,7 +379,7 @@ impl TaskPlanner {
         self.sort_by_selected_item = Some(SortBy::Id);
     }
 
-    fn path_selected_handler(&self, path: PathBuf) {
+    fn path_selected_handler(&mut self, path: PathBuf) {
         if path.is_dir() {
             self.export(path)
         } else {
@@ -383,7 +388,9 @@ impl TaskPlanner {
     }
 
     fn export(&self, path: PathBuf) {
-        todo!()
+        self.save();
+        let dst = path.join("test.json");
+        std::fs::copy(&self.save_path, &dst).expect("Erreur export");
     }
 
     fn import(&self, path: PathBuf) {
