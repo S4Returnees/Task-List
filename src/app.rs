@@ -389,12 +389,18 @@ impl TaskPlanner {
 
     fn export(&self, path: PathBuf) {
         self.save();
-        let dst = path.join("test.json");
+        let dst = path.join("test_export.json");
         std::fs::copy(&self.save_path, &dst).expect("Erreur export");
     }
 
-    fn import(&self, path: PathBuf) {
-        todo!()
+    fn import(&mut self, path: PathBuf) {
+        self.reset();
+        std::fs::copy(&path, &self.save_path).expect("Erreur import");
+        let data = load(&self.save_path);
+        self.task_list.list = data.tasks;
+        self.category_list.list = data.category;
+        self.save();
+
     }
 
     pub fn view(&self) -> Element<'_, Message> {
