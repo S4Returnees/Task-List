@@ -117,20 +117,20 @@ Currently in his second year at EPITA, Quentin is a curious and determined stude
 
 \subsubsection{Alexandre Dupuis}
 \begin{wrapfigure}{r}{0.18\textwidth}
-    \vspace{-50pt}
-    %\includegraphics[width=0.18\textwidth]{illustrations/member.png}
-    \vspace{-50pt}
+    \vspace{-25pt}
+    \includegraphics[width=0.18\textwidth]{illustrations/members/alexandre.jpg}
 \end{wrapfigure}
+Currently in his second year at EPITA, Alexandre is a serious and hardworking student. He knows several programming languages, such as C\#, C, Python, and Rust, thanks to his studies at EPITA and his past projects. When developing his previous video game, he was responsible for the music composition and the enemy system logic. He also handled element detection and image cropping for the OCR project. For this project, he is in charge of implementing the task categories, the data persistence system, and the import/export feature.
 
 \subsubsection{Adrien Le Berre}
-\begin{wrapfigure}{r}{0.18\textwidth}
-    \vspace{-50pt}
-    %\includegraphics[width=0.18\textwidth]{illustrations/member.png}
-    \vspace{-50pt}
+\begin{wrapfigure}{l}{0.18\textwidth}
+    \vspace{10pt}
+    \includegraphics[width=0.18\textwidth]{illustrations/members/adrien.jpg}
 \end{wrapfigure}
+Currently in his second year at EPITA, Adrien Le Berre demonstrated strong rigor and adaptability throughout his academic projects. During his studies, he acquired proficiency in several programming languages, including Python, Rust, C, C\#, as well as web technologies such as HTML, CSS, and JavaScript. During his previous project such as a video game development project in which he was responsible for implementing core gameplay mechanics, ensuring the consistency and functionality of the game systems. In a separate OCR-related project, he was in charge of the user interface, focusing on usability, clarity, and overall user experience. In the current project, he was responsible for the implementation of task management within a Rust application, including the development of core task structures and basic task operations such as creation and manipulation. In addition, he designed and developed the associated website
 
 \subsubsection{Jérôme Lin}
-\vspace{-20pt}
+%\vspace{-20pt}
 \begin{wrapfigure}{r}{0.18\textwidth}
     \vspace{-25pt}
     \centering
@@ -220,7 +220,30 @@ The Task List project reached completion on time, even though deadlines pressed 
 In this part of the document, each task will be presented in order to better understand choices of implementation that were made by the team, the challenges that were faced and the technological tools used. 
 
 \subsection{Basic Task Operation}
+The implementation of tasks within the Rust application was carried out through the definition of a structured data model representing each task as an instance of a Task entity. Each task is initialized using a dedicated constructor function, which assigns default and user-defined values to its attributes. The new function was designed to take as input the task name, description, category identifier, priority level, optional due date, and recurrence configuration. During instantiation, the task is assigned a default identifier value of zero and an initial status set to pending, ensuring that all newly created tasks begin in a consistent state before being processed or stored within the system.
+\\
+
+In addition to task creation, utility methods were implemented to handle task-related data formatting and access. In particular, a method was defined to retrieve the due date of a task in a standardized string format. This method accounts for the optional nature of the due date field by verifying its presence. When a date exists, it is formatted according to a year-month-day pattern; otherwise, an empty string is returned. This design choice ensures robustness by preventing invalid date access while maintaining a consistent output format for display and processing purposes.
+\\
+
+The priority system was also explicitly defined using an enumerated structure representing the different levels of task importance. A static collection containing all possible priority values was implemented to facilitate iteration and validation across the system. This approach ensures that priority handling remains centralized and consistent, ranging from non-prioritized tasks to critical-level tasks. By defining this fixed set of values, the system guarantees strict control over allowed priority states, reducing ambiguity and improving maintainability of the task management logic.
+
+
+
 \subsection{Task Details}
+The implementation of task-related operations was extended through the definition of additional behaviors that allow the system to manipulate and interpret task data efficiently. Beyond the creation and initialization of tasks, specific attention was given to how task attributes are accessed and processed during runtime. This includes the handling of optional fields and the standardization of output formats in order to ensure consistent behavior across the application.
+\\
+
+In particular, utility methods were introduced to manage task metadata in a safe and structured manner. The retrieval of the due date is handled through a dedicated function that checks the existence of a value before attempting any formatting operation. This approach prevents invalid access to optional data and ensures that the system remains robust even when certain attributes are not defined. When a due date is present, it is converted into a standardized string representation, ensuring uniformity across all task displays and interactions. In the absence of a defined date, an empty value is returned to preserve predictable system behavior.
+\\
+
+Furthermore, the priority system plays a central role in task classification and filtering. It is implemented as a fixed enumerated type defining all possible priority levels supported by the application. This enumeration is complemented by a static collection containing all valid priority values, which facilitates iteration, validation, and comparison operations throughout the system. By explicitly defining the full set of priority states, the implementation ensures strong type safety and prevents invalid or inconsistent priority assignments.
+\\
+
+Overall, these design choices contribute to a coherent and reliable task management system in which task creation, attribute handling, and priority classification are tightly controlled and consistently enforced across the application logic.
+
+
+
 \subsection{Task Categories}
 
 To help organize data, the system includes a categorization feature that allows users to effectively group, identify, and filter their tasks.
@@ -269,6 +292,9 @@ This feature brings real added value to the final project, as it makes the appli
     \includegraphics[width=5in]{illustrations/recurring/application.png}
 \end{figure}
 
+
+
+\newpage
 \subsection{Sorting}
 The task sorting and organization system is a key feature of the project, as it directly improves the readability and management of the information displayed in the application. In a task manager, an increase in the number of items can quickly make the interface difficult to use if no sorting mechanism is in place. The main objective of this feature was therefore to allow users to efficiently organize their tasks according to various criteria.
 \\
@@ -406,20 +432,25 @@ To facilitate the import and export of user data from the "Settings" tab, the ap
 
 
 \subsection{Website}
+As part of the Task-List project, a software application developed in Rust, a dedicated documentation website was designed and implemented to present and explain the features of the system. The primary objective of this website is to provide a clear, structured, and accessible documentation layer that enables users and developers to understand the application without directly inspecting the source code. The website serves as a static informational interface built using standard web technologies, namely HTML, CSS, and JavaScript, and is deployed using GitHub Pages to ensure simple and public accessibility.
+\\
+
+The main purpose of the documentation website is to offer a comprehensive presentation of the Task-List application while maintaining clarity and simplicity. The website was designed to structure both functional and technical information in a readable format, making it easier for users to navigate through the different aspects of the project. It also aims to separate the core logic implemented in Rust from the documentation layer, ensuring a clear distinction between backend functionality and user-facing explanation. Finally, the website was intended to be lightweight, easily maintainable, and fully accessible online without requiring any server-side infrastructure.
+\\
+
+This project demonstrates the successful design and implementation of a static documentation website for a Rust-based application. It highlights the ability to structure technical information clearly and to present a software project through an accessible web interface. The use of HTML, CSS, and JavaScript without frameworks allowed for full control over the design and structure of the site while maintaining simplicity and performance.
+\\
+
+Overall, the website effectively fulfills its role as a documentation layer for the Task-List application. It improves the accessibility of the project, provides a clear explanation of its functionalities, and enhances its presentation as a complete software system. It also enables a form of project tracking by centralizing information about the application’s structure, features, and evolution in a single and consistent interface. Future improvements could include the addition of a dark mode, a search functionality within the documentation, or even automatic generation of documentation directly from the Rust source code.
 
 
 
 
 
-\newpage
 \section{Bibliography}
 For this Task List project, the team used several resources listed below.
 \begin{itemize}
     \item Documentation of Iced 0.14.0 \url{Website}
-    \item Functionnality
-    \begin{itemize}
-        \item text \url{https://example.com}
-    \end{itemize}
 \end{itemize}
 
 
