@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>To Do</title>
+</head>
+
+<script>
+const OWNER = "S4Returnees";
+const REPO = "Task-List";
+
+const branchSelect = document.getElementById("branch-select");
+const commitList = document.getElementById("commit-list");
+
+async function loadBranches() {
+
+    commitList.innerHTML = "Chargement...";
+
+    const TOKEN = "TON_NOUVEAU_TOKEN";
+
+    const url = `https://api.github.com/repos/${OWNER}/${REPO}/branches`;
+
+    try {
+
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${TOKEN}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur GitHub : ${response.status}`);
+        }
+
+        const branches = await response.json();
+
+        branchSelect.innerHTML = "";
+
+        branches.forEach(branch => {
+            const option = document.createElement("option");
+            option.value = branch.name;
+            option.textContent = branch.name;
+            branchSelect.appendChild(option);
+        });
+
+        if (branches.length > 0) {
+            loadCommits(branches[0].name);
+        }
+
+    } catch (error) {
+        console.error(error);
+
+        commitList.innerHTML = `
+            <p style="color:red;">
+                Impossible de charger les branches : ${error.message}
+            </p>
+        `;
+    }
+}
+
+async function loadCommits(branchName) {
+
+    commitList.innerHTML = `
+        <p class="loading-text">
+            Chargement des commits...
+        </p>
+    `;
+
+    try {
+
+        const response = await fetch(
+            `https://api.github.com/repos/${OWNER}/${REPO}/commits?sha=${branchName}`
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `Erreur GitHub : ${response.status}`
+            );
+        }
+
+        const commits = await response.json();
+
+        commitList.innerHTML = "";
+
+        commits.forEach(commit => {
+
+            const card = document.createElement("div");
+            card.className = "commit-card";
+
+            const date = new Date(
+                commit.commit.author.date
+            ).toLocaleString();
+
+            card.innerHTML = `
+                <div class="commit-message">
+                    ${commit.commit.message}
+                </div>
+
+                <div class="commit-meta">
+                    👤 ${commit.commit.author.name}<br>
+                    📅 ${date}
+                </div>
+
+                <a
+                    class="commit-link"
+                    href="${commit.html_url}"
+                    target="_blank"
+                >
+                    Voir le commit →
+                </a>
+            `;
+
+            commitList.appendChild(card);
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        commitList.innerHTML = `
+            <p style="color:red;">
+                Impossible de charger les commits :
+                ${error.message}
+            </p>
+        `;
+    }
+}
+
+branchSelect.addEventListener("change", (e) => {
+    loadCommits(e.target.value);
+});
+
+loadBranches();
+</script>
+
+<body>
+<header class="header">
+    <div class="container">
+        <div class="logo-container">
+            <img src="images/logo_v1.png" alt="Logo" class="logo">
+            <span class="title">To Do</span>
+        </div>
+
+        <nav class="nav">
+            <a href="#information">Informations</a>
+            <a href="#telechargement">Téléchargement</a>
+            <a href="#projet">Projet</a>
+            <a href="connection.html" class="btn-login">Connexion</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <h1>La to do list à portée de main</h1>
+    <p>Organisez vos tâches simplement et efficacement</p>
+</section>
+
+<section id="information" class="info-section">
+<div class="section-transition transition-dark-to-light"></div>
+
+    <div class="info-container">
+        <div class="info-intro">
+            <h2>Informations</h2>
+            <p>
+                Une application pensée pour offrir une organisation simple, claire
+                et moderne, avec une expérience agréable sur ordinateur comme sur mobile.
+            </p>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-card-text">
+                    <h3>Organisation intuitive</h3>
+                    <p>
+                        Gérez facilement vos tâches, vos priorités et vos objectifs dans
+                        une interface lisible et structurée, sans surcharge visuelle.
+                    </p>
+                </div>
+                <div class="info-card-image">
+                    <img src="images/gestion.png" alt="Organisation des tâches">
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-text">
+                    <h3>Design moderne</h3>
+                    <p>
+                        Une identité visuelle cohérente, des couleurs professionnelles
+                        et une mise en page aérée pour mettre en valeur l’essentiel.
+                    </p>
+                </div>
+                <div class="info-card-image">
+                    <img src="images/design.png" alt="Design moderne de l'application">
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-text">
+                    <h3>Accessible partout</h3>
+                    <p>
+                        Consultez vos listes, suivez votre progression et restez efficace
+                        où que vous soyez grâce à une interface adaptable.
+                    </p>
+                </div>
+                <div class="info-card-image">
+                    <img src="images/accessible.png" alt="Application accessible partout">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-transition transition-light-to-project"></div>
+</section>
+<section id="projet" class="project-section">
+    <div class="project-container">
+
+        <div class="project-intro">
+            <h2>Le projet</h2>
+            <p>
+                Retrouvez le cahier des charges du projet ainsi que son avancement
+                à travers une frise chronologique mise à jour au fil du temps.
+            </p>
+        </div>
+
+        <div class="project-doc">
+            <div class="project-doc-text">
+                <h3>Cahier des charges</h3>
+                <p>
+                    Téléchargez le document de référence pour consulter les objectifs,
+                    les fonctionnalités attendues, les contraintes techniques et les
+                    étapes du projet.
+                </p>
+            </div>
+
+            <a href="documents/cahier_des_charges.pdf" download class="download-btn">
+                Télécharger le cahier des charges
+            </a>
+        </div>
+
+        <div class="timeline-block">
+            <h3>Avancement du projet</h3>
+
+            <div class="timeline">
+                <div class="timeline-item done">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">23 au 29 mars</span>
+                        <h4>Définition du besoin</h4>
+                        <p>Analyse du projet, des utilisateurs et des fonctionnalités principales.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item done">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">30 mars au 13 avril</span>
+                        <h4>Maquettes et début du code</h4>
+                        <p>Création du site internet, implémentation des premières fonctions</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item done">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">13 avril au 20 avril</span>
+                        <h4>Développement de l’interface</h4>
+                        <p>Mise en place de la page principale, de la connexion et des sections dynamiques.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item done">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">20 avril au 27 avril</span>
+                        <h4>Fonctionnalités avancées</h4>
+                        <p>Ajout de la gestion des tâches, amélioration de l’expérience utilisateur.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item done">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">27 avril au 17 mai</span>
+                        <h4>Tests et finalisation</h4>
+                        <p>Corrections, optimisation responsive et préparation de la version finale.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section id="telechargement" class="download-section">
+    <div class="section-transition transition-project-to-download"></div>
+
+    <div class="download-container">
+        <div class="download-intro">
+            <h2>Téléchargement</h2>
+            <p>
+                Retrouvez ici les fichiers principaux du projet : l’application
+                ainsi que les deux rapports de soutenance.
+            </p>
+        </div>
+
+        <div class="download-grid">
+            <div class="download-card">
+                <div class="download-icon">📦</div>
+                <h3>Application</h3>
+                <p>
+                    Téléchargez la version actuelle de l’application To Do List.
+                </p>
+                <a href="telechargements/application.zip" download class="download-btn-dark">
+                    Télécharger l’application
+                </a>
+            </div>
+
+            <div class="download-card">
+                <div class="download-icon">📄</div>
+                <h3>Rapport de soutenance 1</h3>
+                <p>
+                    Consultez le premier rapport présentant le cadrage, les objectifs
+                    et les premières étapes du projet.
+                </p>
+                <a href="telechargements/rapport_soutenance_1.pdf" download class="download-btn-dark">
+                    Télécharger le rapport 1
+                </a>
+            </div>
+
+            <div class="download-card">
+                <div class="download-icon">📄</div>
+                <h3>Rapport de soutenance 2</h3>
+                <p>
+                    Téléchargez le second rapport avec l’avancement, les résultats
+                    et la finalisation du projet.
+                </p>
+                <a href="telechargements/rapport_soutenance_2.pdf" download class="download-btn-dark">
+                    Télécharger le rapport 2
+                </a>
+            </div>
+        </div>
+    </div>
+<div class="github-history">
+    <div class="github-history-header">
+        <h3>Historique des commits</h3>
+        <p>
+            Suivez l’évolution du projet à travers les derniers commits du dépôt GitHub.
+        </p>
+    </div>
+
+    <!-- Sélection de branche -->
+    <div class="branch-selector">
+        <label for="branch-select">Branche :</label>
+
+        <select id="branch-select">
+            <option>Chargement...</option>
+        </select>
+    </div>
+
+    <!-- Liste scrollable -->
+    <div id="commit-list" class="commit-list">
+        <p class="loading-text">Chargement des commits...</p>
+    </div>
+</div>
+</section>
+
+</body>

@@ -508,73 +508,85 @@ body {
     }
 }
 .github-history {
-    margin-top: 40px;
-    background: #2e2d3a;
-    border: 1px solid rgba(188, 210, 238, 0.08);
-    border-radius: 24px;
-    padding: 32px 26px;
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.22);
-}
-
-.github-history-header {
-    margin-bottom: 24px;
+    background: #111827;
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
+    width: 100%;
 }
 
 .github-history-header h3 {
-    margin: 0 0 10px 0;
-    font-size: 26px;
-    color: white;
+    margin-bottom: 8px;
+    font-size: 1.6rem;
 }
 
 .github-history-header p {
-    margin: 0;
-    color: #bcd2ee;
-    line-height: 1.6;
+    color: #9ca3af;
+    margin-bottom: 20px;
+}
+
+.branch-selector {
+    margin-bottom: 20px;
+}
+
+#branch-select {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    background: #1f2937;
+    color: white;
+    font-size: 1rem;
 }
 
 .commit-list {
+    max-height: 500px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
+    padding-right: 10px;
 }
 
-.commit-item {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(188, 210, 238, 0.08);
-    border-radius: 16px;
-    padding: 18px 20px;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+/* Scrollbar custom */
+.commit-list::-webkit-scrollbar {
+    width: 8px;
 }
 
-.commit-item:hover {
+.commit-list::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 10px;
+}
+
+.commit-card {
+    background: #1f2937;
+    padding: 16px;
+    border-radius: 14px;
+    transition: 0.2s ease;
+}
+
+.commit-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(155, 126, 222, 0.5);
+    background: #263244;
 }
 
 .commit-message {
-    font-size: 17px;
-    font-weight: 600;
-    color: white;
-    margin-bottom: 8px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
 }
 
 .commit-meta {
-    font-size: 14px;
-    color: #bcd2ee;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    color: #9ca3af;
 }
 
-.commit-meta a {
-    color: #9b7ede;
+.commit-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #60a5fa;
     text-decoration: none;
 }
 
-.commit-meta a:hover {
+.commit-link:hover {
     text-decoration: underline;
-}
-
-.loading-text,
-.error-text {
-    color: #bcd2ee;
-    font-size: 15px;
 }
