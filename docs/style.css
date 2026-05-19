@@ -507,86 +507,38 @@ body {
         padding: 26px 22px;
     }
 }
-.github-history {
-    background: #111827;
-    border-radius: 16px;
-    padding: 24px;
-    color: white;
-    width: 100%;
-}
-
-.github-history-header h3 {
-    margin-bottom: 8px;
-    font-size: 1.6rem;
-}
-
-.github-history-header p {
-    color: #9ca3af;
-    margin-bottom: 20px;
+.github-history-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .branch-selector {
-    margin-bottom: 20px;
-}
-
-#branch-select {
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: none;
-    background: #1f2937;
-    color: white;
-    font-size: 1rem;
-}
-
-.commit-list {
-    max-height: 500px;
-    overflow-y: auto;
     display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding-right: 10px;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Scrollbar custom */
-.commit-list::-webkit-scrollbar {
-    width: 8px;
+.branch-selector label {
+    color: #bcd2ee;
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.commit-list::-webkit-scrollbar-thumb {
-    background: #374151;
+.branch-selector select {
+    background: #242331;
+    color: white;
+    border: 1px solid rgba(188, 210, 238, 0.2);
     border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
 }
 
-.commit-card {
-    background: #1f2937;
-    padding: 16px;
-    border-radius: 14px;
-    transition: 0.2s ease;
-}
-
-.commit-card:hover {
-    transform: translateY(-2px);
-    background: #263244;
-}
-
-.commit-message {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #fff;
-}
-
-.commit-meta {
-    font-size: 0.9rem;
-    color: #9ca3af;
-}
-
-.commit-link {
-    display: inline-block;
-    margin-top: 10px;
-    color: #60a5fa;
-    text-decoration: none;
-}
-
-.commit-link:hover {
-    text-decoration: underline;
+.branch-selector select:focus {
+    border-color: #9b7ede;
+    box-shadow: 0 0 0 3px rgba(155, 126, 222, 0.15);
 }
