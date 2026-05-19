@@ -8,133 +8,130 @@
 </head>
 
 <script>
-const OWNER = "S4Returnees";
-const REPO = "Task-List";
+document.addEventListener("DOMContentLoaded", () => {
+    const owner = "S4Returnees";
+    const repo = "Task-List";
 
-const branchSelect = document.getElementById("branch-select");
-const commitList = document.getElementById("commit-list");
+    const commitList = document.getElementById("commit-list");
+    const branchSelect = document.getElementById("branch-select");
 
-async function loadBranches() {
+    if (!commitList) {
+        console.error("Élément #commit-list introuvable");
+        return;
+    }
 
-    commitList.innerHTML = "Chargement...";
+    if (!branchSelect) {
+        console.error("Élément #branch-select introuvable");
+        return;
+    }
 
-    const TOKEN = "TON_NOUVEAU_TOKEN";
+    async function loadBranches() {
+        try {
+            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`, {
+                headers: {
+                    "Accept": "application/vnd.github+json"
+                }
+            });
 
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}/branches`;
-
-    try {
-
-        const response = await fetch(url, {
-            headers: {
-                Authorization: `Bearer ${TOKEN}`
+            if (!response.ok) {
+                throw new Error(`Erreur chargement branches : ${response.status}`);
             }
-        });
 
-        if (!response.ok) {
-            throw new Error(`Erreur GitHub : ${response.status}`);
+            const branches = await response.json();
+
+            if (!Array.isArray(branches) || branches.length === 0) {
+                branchSelect.innerHTML = `<option value="">Aucune branche</option>`;
+                return;
+            }
+
+            branchSelect.innerHTML = "";
+
+            branches.forEach(branch => {
+                const option = document.createElement("option");
+                option.value = branch.name;
+                option.textContent = branch.name;
+                branchSelect.appendChild(option);
+            });
+
+            const defaultBranch = branches.find(branch => branch.name === "main")
+                || branches.find(branch => branch.name === "master")
+                || branches[0];
+
+            branchSelect.value = defaultBranch.name;
+            await loadCommits(defaultBranch.name);
+
+        } catch (error) {
+            console.error(error);
+            branchSelect.innerHTML = `<option value="">Erreur</option>`;
+            commitList.innerHTML = "<p class='error-text'>Impossible de charger les branches.</p>";
         }
-
-        const branches = await response.json();
-
-        branchSelect.innerHTML = "";
-
-        branches.forEach(branch => {
-            const option = document.createElement("option");
-            option.value = branch.name;
-            option.textContent = branch.name;
-            branchSelect.appendChild(option);
-        });
-
-        if (branches.length > 0) {
-            loadCommits(branches[0].name);
-        }
-
-    } catch (error) {
-        console.error(error);
-
-        commitList.innerHTML = `
-            <p style="color:red;">
-                Impossible de charger les branches : ${error.message}
-            </p>
-        `;
     }
-}
 
-async function loadCommits(branchName) {
+    async function loadCommits(branchName) {
+        commitList.innerHTML = "<p class='loading-text'>Chargement des commits...</p>";
 
-    commitList.innerHTML = `
-        <p class="loading-text">
-            Chargement des commits...
-        </p>
-    `;
-
-    try {
-
-        const response = await fetch(
-            `https://api.github.com/repos/${OWNER}/${REPO}/commits?sha=${branchName}`
-        );
-
-        if (!response.ok) {
-            throw new Error(
-                `Erreur GitHub : ${response.status}`
+        try {
+            const response = await fetch(
+                `https://api.github.com/repos/${owner}/${repo}/commits?sha=${encodeURIComponent(branchName)}`,
+                {
+                    headers: {
+                        "Accept": "application/vnd.github+json"
+                    }
+                }
             );
+
+            if (!response.ok) {
+                throw new Error(`Erreur API GitHub : ${response.status}`);
+            }
+
+            const commits = await response.json();
+
+            if (!Array.isArray(commits) || commits.length === 0) {
+                commitList.innerHTML = "<p class='loading-text'>Aucun commit trouvé pour cette branche.</p>";
+                return;
+            }
+
+            commitList.innerHTML = "";
+
+            commits.slice(0, 10).forEach(commit => {
+                const message = commit.commit?.message || "Message indisponible";
+                const author = commit.commit?.author?.name || "Auteur inconnu";
+                const dateRaw = commit.commit?.author?.date;
+                const date = dateRaw
+                    ? new Date(dateRaw).toLocaleDateString("fr-FR")
+                    : "Date inconnue";
+                const url = commit.html_url;
+
+                const item = document.createElement("div");
+                item.className = "commit-item";
+
+                item.innerHTML = `
+                    <div class="commit-message">${message}</div>
+                    <div class="commit-meta">
+                        ${author} • ${date}<br>
+                        <a href="${url}" target="_blank" rel="noopener noreferrer">Voir sur GitHub</a>
+                    </div>
+                `;
+
+                commitList.appendChild(item);
+            });
+
+        } catch (error) {
+            console.error(error);
+            commitList.innerHTML = "<p class='error-text'>Erreur lors du chargement des commits.</p>";
         }
-
-        const commits = await response.json();
-
-        commitList.innerHTML = "";
-
-        commits.forEach(commit => {
-
-            const card = document.createElement("div");
-            card.className = "commit-card";
-
-            const date = new Date(
-                commit.commit.author.date
-            ).toLocaleString();
-
-            card.innerHTML = `
-                <div class="commit-message">
-                    ${commit.commit.message}
-                </div>
-
-                <div class="commit-meta">
-                    👤 ${commit.commit.author.name}<br>
-                    📅 ${date}
-                </div>
-
-                <a
-                    class="commit-link"
-                    href="${commit.html_url}"
-                    target="_blank"
-                >
-                    Voir le commit →
-                </a>
-            `;
-
-            commitList.appendChild(card);
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        commitList.innerHTML = `
-            <p style="color:red;">
-                Impossible de charger les commits :
-                ${error.message}
-            </p>
-        `;
     }
-}
 
-branchSelect.addEventListener("change", (e) => {
-    loadCommits(e.target.value);
+    branchSelect.addEventListener("change", () => {
+        const selectedBranch = branchSelect.value;
+        if (selectedBranch) {
+            loadCommits(selectedBranch);
+        }
+    });
+
+    loadBranches();
 });
-
-loadBranches();
 </script>
-
 <body>
 <header class="header">
     <div class="container">
@@ -340,27 +337,31 @@ loadBranches();
             </div>
         </div>
     </div>
-<div class="github-history">
     <div class="github-history-header">
+    <h3>Historique des commits</h3>
+    <p>Suivez l’évolution du projet à travers les derniers commits du dépôt GitHub.</p>
+</div>
+    <div class="github-history-header">
+    <div class="github-history-top">
         <h3>Historique des commits</h3>
-        <p>
-            Suivez l’évolution du projet à travers les derniers commits du dépôt GitHub.
-        </p>
+
+        <div class="branch-selector">
+            <label for="branch-select">Branch</label>
+            <select id="branch-select">
+                <option value="">Chargement...</option>
+            </select>
+        </div>
     </div>
 
-    <!-- Sélection de branche -->
-    <div class="branch-selector">
-        <label for="branch-select">Branche :</label>
-
-        <select id="branch-select">
-            <option>Chargement...</option>
-        </select>
-    </div>
-
-    <!-- Liste scrollable -->
-    <div id="commit-list" class="commit-list">
-        <p class="loading-text">Chargement des commits...</p>
-    </div>
+    <p>Suivez l’évolution du projet à travers les derniers commits du dépôt GitHub.</p>
+</div>
+<div class="github-history-under">
+    <h3>Voir tout :</h3>
+    <p>
+        <a id="full-history-link" href="https://github.com/S4Returnees/Task-List/commits" target="_blank" rel="noopener noreferrer">
+            Historique entier
+        </a>
+    </p>
 </div>
 </section>
 
